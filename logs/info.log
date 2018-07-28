@@ -1,0 +1,35 @@
+2018-07-29 01:17:36.639 INFO  org.springframework.context.support.AbstractApplicationContext.prepareRefresh(AbstractApplicationContext.java:589) - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@48a242ce: startup date [Sun Jul 29 01:17:36 CST 2018]; root of context hierarchy
+2018-07-29 01:17:36.720 INFO  org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:316) - Loading XML bean definitions from class path resource [applicationContext.xml]
+2018-07-29 01:17:36.978 INFO  org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:316) - Loading XML bean definitions from class path resource [applicationContext-dataSource.xml]
+2018-07-29 01:17:37.990 INFO  org.crap.jrain.core.Resource.loadProp(Resource.java:98) - load path:/C:/Users/Crap/eclipse-workspace/lottery-plan/target/classes/config/language
+2018-07-29 01:17:37.993 INFO  org.crap.jrain.core.Resource.loadProp(Resource.java:102) - load realPath:/C:/Users/Crap/eclipse-workspace/lottery-plan/target/classes/config/language
+2018-07-29 01:17:37.995 INFO  org.crap.jrain.core.Resource.loadProp(Resource.java:107) - load files num:2
+2018-07-29 01:17:37.995 INFO  org.crap.jrain.core.Resource.loadProp(Resource.java:109) - load file C:\Users\Crap\eclipse-workspace\crap-all\org.crap.jrain\org.crap.jrain.core\target\classes\config\language\en_US.properties
+2018-07-29 01:17:37.995 INFO  org.crap.jrain.core.Resource.loadProp(Resource.java:109) - load file C:\Users\Crap\eclipse-workspace\crap-all\org.crap.jrain\org.crap.jrain.core\target\classes\config\language\zh_CN.properties
+2018-07-29 01:17:42.480 INFO  org.crap.jrain.core.launch.Boot.scanPump(Boot.java:136) - scan [@Pump] from path:[plan.server.pump]
+2018-07-29 01:17:42.483 INFO  org.crap.jrain.core.util.PackageUtil.getClassName(PackageUtil.java:118) - 解析路径：file:/C:/Users/Crap/eclipse-workspace/lottery-plan/target/classes/plan/server/pump
+2018-07-29 01:17:42.483 INFO  org.crap.jrain.core.util.PackageUtil.getClassName(PackageUtil.java:119) - 解析路径：/C:/Users/Crap/eclipse-workspace/lottery-plan/target/classes/plan/server/pump
+2018-07-29 01:17:42.483 INFO  org.crap.jrain.core.util.PackageUtil.getClassName(PackageUtil.java:122) - uriPath:/C:/Users/Crap/eclipse-workspace/lottery-plan/target/classes/plan/server/pump
+2018-07-29 01:17:42.486 INFO  org.crap.jrain.core.asm.adapter.DataPumpAdapter.resolve(DataPumpAdapter.java:47) - regist [@Pipe] to Pump mapping[api$apiDocument]
+2018-07-29 01:17:42.493 INFO  org.crap.jrain.core.util.ClassUtil.loadClass(ClassUtil.java:169) - ClassUtil.loadClass classpath0: /C:/Users/Crap/eclipse-workspace/lottery-plan/target/classes/
+2018-07-29 01:17:42.493 INFO  org.crap.jrain.core.util.ClassUtil.loadClass(ClassUtil.java:170) - ClassUtil.loadClass classpath1: file:/C:/Users/Crap/eclipse-workspace/lottery-plan/target/classes/
+2018-07-29 01:17:42.507 INFO  org.crap.jrain.core.asm.MethodEnhancer.generateSecure(MethodEnhancer.java:95) - classpath: /C:/Users/Crap/eclipse-workspace/lottery-plan/target/classes/plan/server/pump/ApiPump.class
+2018-07-29 01:17:42.507 INFO  org.crap.jrain.core.asm.MethodEnhancer.generateSecure(MethodEnhancer.java:96) - url: /C:/Users/Crap/eclipse-workspace/lottery-plan/target/classes/
+2018-07-29 01:17:42.507 INFO  org.crap.jrain.core.asm.MethodEnhancer.generateSecure(MethodEnhancer.java:97) - path: /C:/Users/Crap/eclipse-workspace/lottery-plan/target/classes/plan/server/pump/ApiPump$api.class
+2018-07-29 01:17:42.507 INFO  org.crap.jrain.core.asm.MethodEnhancer.generateSecure(MethodEnhancer.java:98) - dir: /C:/Users/Crap/eclipse-workspace/lottery-plan/target/classes/plan/server/pump
+2018-07-29 01:17:42.509 INFO  org.crap.jrain.core.asm.adapter.DataPumpAdapter.resolve(DataPumpAdapter.java:56) - generate secure [@Pipe] to [plan.server.pump.ApiPump$api] done
+2018-07-29 01:17:42.509 INFO  org.crap.jrain.core.launch.Boot.scanPump(Boot.java:155) - scan [@Pump] complete.
+2018-07-29 01:17:42.510 INFO  org.crap.jrain.core.launch.Boot.scanBarScreen(Boot.java:175) - scan [@BarScreen] from path:[api$apiDocument]
+2018-07-29 01:17:42.511 INFO  org.crap.jrain.core.launch.SpringBoot.registerServer(SpringBoot.java:56) - regist [@ServerMethod] to Spring beanFactory
+2018-07-29 01:17:42.512 INFO  org.crap.jrain.core.launch.SpringBoot.registerServer(SpringBoot.java:88) - regist bean info:[api$apiDocument=plan.server.pump.ApiPump$api]
+2018-07-29 01:17:43.464 INFO  io.netty.util.internal.logging.Slf4JLogger.info(Slf4JLogger.java:101) - [id: 0x22521363] REGISTERED
+2018-07-29 01:17:43.467 INFO  io.netty.util.internal.logging.Slf4JLogger.info(Slf4JLogger.java:101) - [id: 0x22521363] BIND: 0.0.0.0/0.0.0.0:9527
+2018-07-29 01:17:43.469 INFO  io.netty.util.internal.logging.Slf4JLogger.info(Slf4JLogger.java:101) - [id: 0x22521363, L:/0:0:0:0:0:0:0:0:9527] ACTIVE
+2018-07-29 01:21:03.797 INFO  org.springframework.context.support.AbstractApplicationContext.prepareRefresh(AbstractApplicationContext.java:589) - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@48a242ce: startup date [Sun Jul 29 01:21:03 CST 2018]; root of context hierarchy
+2018-07-29 01:21:03.850 INFO  org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:316) - Loading XML bean definitions from class path resource [applicationContext.xml]
+2018-07-29 01:21:04.050 INFO  org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:316) - Loading XML bean definitions from class path resource [applicationContext-dataSource.xml]
+2018-07-29 01:21:04.950 INFO  org.crap.jrain.core.Resource.loadProp(Resource.java:98) - load path:/C:/Users/Crap/eclipse-workspace/lottery-plan/target/classes/config/language
+2018-07-29 01:21:04.953 INFO  org.crap.jrain.core.Resource.loadProp(Resource.java:102) - load realPath:/C:/Users/Crap/eclipse-workspace/lottery-plan/target/classes/config/language
+2018-07-29 01:21:04.955 INFO  org.crap.jrain.core.Resource.loadProp(Resource.java:107) - load files num:2
+2018-07-29 01:21:04.955 INFO  org.crap.jrain.core.Resource.loadProp(Resource.java:109) - load file C:\Users\Crap\eclipse-workspace\crap-all\org.crap.jrain\org.crap.jrain.core\target\classes\config\language\en_US.properties
+2018-07-29 01:21:04.955 INFO  org.crap.jrain.core.Resource.loadProp(Resource.java:109) - load file C:\Users\Crap\eclipse-workspace\crap-all\org.crap.jrain\org.crap.jrain.core\target\classes\config\language\zh_CN.properties
