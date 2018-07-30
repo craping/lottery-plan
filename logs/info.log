@@ -1,0 +1,30 @@
+2018-07-29 01:51:39.476 INFO  org.springframework.context.support.AbstractApplicationContext.prepareRefresh(AbstractApplicationContext.java:589) - Refreshing org.springframework.context.support.ClassPathXmlApplicationContext@5f71c76a: startup date [Sun Jul 29 01:51:39 CST 2018]; root of context hierarchy
+2018-07-29 01:51:39.531 INFO  org.springframework.beans.factory.xml.XmlBeanDefinitionReader.loadBeanDefinitions(XmlBeanDefinitionReader.java:316) - Loading XML bean definitions from class path resource [applicationContext.xml]
+2018-07-29 01:51:40.042 INFO  org.crap.jrain.core.Resource.loadProp(Resource.java:98) - load path:/D:/workspaceneo/lottery-plan/target/classes/config/language
+2018-07-29 01:51:40.044 INFO  org.crap.jrain.core.Resource.loadProp(Resource.java:102) - load realPath:/D:/workspaceneo/lottery-plan/target/classes/config/language
+2018-07-29 01:51:40.045 INFO  org.crap.jrain.core.Resource.loadProp(Resource.java:107) - load files num:2
+2018-07-29 01:51:40.045 INFO  org.crap.jrain.core.Resource.loadProp(Resource.java:109) - load file D:\workspaceneo\crap-all\org.crap.jrain\org.crap.jrain.core\target\classes\config\language\en_US.properties
+2018-07-29 01:51:40.045 INFO  org.crap.jrain.core.Resource.loadProp(Resource.java:109) - load file D:\workspaceneo\crap-all\org.crap.jrain\org.crap.jrain.core\target\classes\config\language\zh_CN.properties
+2018-07-29 01:51:46.216 INFO  org.crap.jrain.core.launch.Boot.scanPump(Boot.java:136) - scan [@Pump] from path:[plan.server.pump]
+2018-07-29 01:51:46.218 INFO  org.crap.jrain.core.util.PackageUtil.getClassName(PackageUtil.java:118) - 解析路径：file:/D:/workspaceneo/lottery-plan/target/classes/plan/server/pump
+2018-07-29 01:51:46.219 INFO  org.crap.jrain.core.util.PackageUtil.getClassName(PackageUtil.java:119) - 解析路径：/D:/workspaceneo/lottery-plan/target/classes/plan/server/pump
+2018-07-29 01:51:46.219 INFO  org.crap.jrain.core.util.PackageUtil.getClassName(PackageUtil.java:122) - uriPath:/D:/workspaceneo/lottery-plan/target/classes/plan/server/pump
+2018-07-29 01:51:46.226 INFO  org.crap.jrain.core.asm.adapter.DataPumpAdapter.resolve(DataPumpAdapter.java:47) - regist [@Pipe] to Pump mapping[api$apiDocument]
+2018-07-29 01:51:46.235 INFO  org.crap.jrain.core.util.ClassUtil.loadClass(ClassUtil.java:169) - ClassUtil.loadClass classpath0: /D:/workspaceneo/lottery-plan/target/classes/
+2018-07-29 01:51:46.235 INFO  org.crap.jrain.core.util.ClassUtil.loadClass(ClassUtil.java:170) - ClassUtil.loadClass classpath1: file:/D:/workspaceneo/lottery-plan/target/classes/
+2018-07-29 01:51:46.251 INFO  org.crap.jrain.core.asm.MethodEnhancer.generateSecure(MethodEnhancer.java:95) - classpath: /D:/workspaceneo/lottery-plan/target/classes/plan/server/pump/ApiPump.class
+2018-07-29 01:51:46.251 INFO  org.crap.jrain.core.asm.MethodEnhancer.generateSecure(MethodEnhancer.java:96) - url: /D:/workspaceneo/lottery-plan/target/classes/
+2018-07-29 01:51:46.251 INFO  org.crap.jrain.core.asm.MethodEnhancer.generateSecure(MethodEnhancer.java:97) - path: /D:/workspaceneo/lottery-plan/target/classes/plan/server/pump/ApiPump$api.class
+2018-07-29 01:51:46.251 INFO  org.crap.jrain.core.asm.MethodEnhancer.generateSecure(MethodEnhancer.java:98) - dir: /D:/workspaceneo/lottery-plan/target/classes/plan/server/pump
+2018-07-29 01:51:46.258 INFO  org.crap.jrain.core.asm.adapter.DataPumpAdapter.resolve(DataPumpAdapter.java:56) - generate secure [@Pipe] to [plan.server.pump.ApiPump$api] done
+2018-07-29 01:51:46.258 INFO  org.crap.jrain.core.launch.Boot.scanPump(Boot.java:155) - scan [@Pump] complete.
+2018-07-29 01:51:46.260 INFO  org.crap.jrain.core.launch.Boot.scanBarScreen(Boot.java:175) - scan [@BarScreen] from path:[api$apiDocument]
+2018-07-29 01:51:46.260 INFO  org.crap.jrain.core.launch.SpringBoot.registerServer(SpringBoot.java:56) - regist [@ServerMethod] to Spring beanFactory
+2018-07-29 01:51:46.262 INFO  org.crap.jrain.core.launch.SpringBoot.registerServer(SpringBoot.java:88) - regist bean info:[api$apiDocument=plan.server.pump.ApiPump$api]
+2018-07-29 01:51:46.970 INFO  io.netty.util.internal.logging.Slf4JLogger.info(Slf4JLogger.java:101) - [id: 0xb0ec852b] REGISTERED
+2018-07-29 01:51:46.972 INFO  io.netty.util.internal.logging.Slf4JLogger.info(Slf4JLogger.java:101) - [id: 0xb0ec852b] BIND: 0.0.0.0/0.0.0.0:9527
+2018-07-29 01:51:46.975 INFO  io.netty.util.internal.logging.Slf4JLogger.info(Slf4JLogger.java:101) - [id: 0xb0ec852b, L:/0:0:0:0:0:0:0:0:9527] ACTIVE
+2018-07-29 01:52:00.260 INFO  io.netty.util.internal.logging.Slf4JLogger.info(Slf4JLogger.java:101) - [id: 0xb0ec852b, L:/0:0:0:0:0:0:0:0:9527] READ: [id: 0xa356ccfa, L:/127.0.0.1:9527 - R:/127.0.0.1:49545]
+2018-07-29 01:52:00.261 INFO  io.netty.util.internal.logging.Slf4JLogger.info(Slf4JLogger.java:101) - [id: 0xb0ec852b, L:/0:0:0:0:0:0:0:0:9527] READ COMPLETE
+2018-07-29 01:52:00.262 INFO  io.netty.util.internal.logging.Slf4JLogger.info(Slf4JLogger.java:101) - [id: 0xb0ec852b, L:/0:0:0:0:0:0:0:0:9527] READ: [id: 0x0edfee0e, L:/127.0.0.1:9527 - R:/127.0.0.1:49546]
+2018-07-29 01:52:00.264 INFO  io.netty.util.internal.logging.Slf4JLogger.info(Slf4JLogger.java:101) - [id: 0xb0ec852b, L:/0:0:0:0:0:0:0:0:9527] READ COMPLETE
