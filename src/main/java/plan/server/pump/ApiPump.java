@@ -28,7 +28,7 @@ public class ApiPump extends DataPump<Map<String, Object>> {
 	@BarScreen(desc="API文档")
 	public Errcode api (Map<String, Object> params) {
 		try {
-			String info = PackageUtil.apiResolve("org.crap.collect.main.server.pump", "http://127.0.0.1:"+HttpServer.PORT);
+			String info = PackageUtil.apiResolve("plan.server.pump", "http://127.0.0.1:"+HttpServer.PORT);
 			log.info("info:"+info);
 			return new DataResult(Errors.OK, new Data(info));
 		} catch (Exception e) {
