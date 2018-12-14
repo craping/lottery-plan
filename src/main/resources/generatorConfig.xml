@@ -4,35 +4,39 @@
       "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 
 <generatorConfiguration>
-	<classPathEntry location="E:\Crap\maven\repository\mysql\mysql-connector-java\5.1.29\mysql-connector-java-5.1.29.jar" />
+	<classPathEntry location="E:\mysql-connector-java-5.1.29.jar" />
 	<context id="DB2Tables" targetRuntime="MyBatis3">
 		<plugin type="org.crap.data.dao.sql.util.OverIsMergeablePlugin" />
 		<commentGenerator>
 			<property name="suppressAllComments" value="true" />
 		</commentGenerator>
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://localhost:3306/plan" 
+			connectionURL="jdbc:mysql://localhost:3306/lottery_plan" 
 			userId="root"
-			password="Crap123!@#">
+			password="123321">
 		</jdbcConnection>
 		<javaTypeResolver>
 			<property name="forceBigDecimals" value="false" />
 		</javaTypeResolver>
 
-		<javaModelGenerator targetPackage="plan.data.sql.entity" targetProject="src/main/java">
+		<javaModelGenerator targetPackage="plan.data.sql.entity" targetProject="lottery-plan/src/main/java">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
-		<sqlMapGenerator targetPackage="plan.data.sql.mapper" targetProject="src/main/java">
+		<sqlMapGenerator targetPackage="plan.data.sql.mapper" targetProject="lottery-plan/src/main/java">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 
-		<javaClientGenerator type="XMLMAPPER" targetPackage="plan.data.sql.service" targetProject="src/main/java">
+		<javaClientGenerator type="XMLMAPPER" targetPackage="plan.data.sql.service" targetProject="lottery-plan/src/main/java">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 
-		
+		<table tableName="lottery_user" domainObjectName="LotteryUser" 
+			enableCountByExample="false" enableSelectByExample="false" 
+			enableUpdateByExample="false" enableDeleteByExample="false">
+			<generatedKey column="id" sqlStatement="MySql" identity="true"/>
+		</table>
 	</context>
 
 </generatorConfiguration>

@@ -30,8 +30,7 @@
 	<context:component-scan base-package="org.crap.collect.dao" />
 		
 	<!-- DataSource Start -->
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"  
-        destroy-method="close">  
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">  
         <property name="driverClassName" value="${db.driver}" />  
         <property name="url" value="${db.url}" />  
         <property name="username" value="${db.username}" />  
@@ -59,7 +58,7 @@
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
         <property name="dataSource" ref="dataSource" />  
         <!-- 自动扫描mapping.xml文件 -->
-        <property name="mapperLocations" value="classpath:plan/data/sql/mapping/*.xml"></property>  
+        <property name="mapperLocations" value="classpath:plan/data/sql/mapper/*.xml"></property>  
     </bean>
     
      <!-- sessionFactory bind to SessionTemplate -->
