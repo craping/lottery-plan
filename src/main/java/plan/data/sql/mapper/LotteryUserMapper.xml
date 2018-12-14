@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="plan.data.sql.service.LotteryUserMapper">
+  <resultMap id="BaseResultMap" type="plan.data.sql.entity.LotteryUser">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_pwd" jdbcType="VARCHAR" property="userPwd" />
+    <result column="qq" jdbcType="VARCHAR" property="qq" />
+    <result column="wechat" jdbcType="VARCHAR" property="wechat" />
+    <result column="phone_num" jdbcType="INTEGER" property="phoneNum" />
+    <result column="phone_state" jdbcType="INTEGER" property="phoneState" />
+    <result column="locked" jdbcType="INTEGER" property="locked" />
+    <result column="server_state" jdbcType="INTEGER" property="serverState" />
+    <result column="server_start" jdbcType="TIMESTAMP" property="serverStart" />
+    <result column="server_end" jdbcType="TIMESTAMP" property="serverEnd" />
+    <result column="reg_time" jdbcType="TIMESTAMP" property="regTime" />
+    <result column="reg_ip" jdbcType="VARCHAR" property="regIp" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="cdkey" jdbcType="VARCHAR" property="cdkey" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_name, user_pwd, qq, wechat, phone_num, phone_state, locked, server_state, 
+    server_start, server_end, reg_time, reg_ip, token, cdkey
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from lottery_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from lottery_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="plan.data.sql.entity.LotteryUser">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into lottery_user (user_name, user_pwd, qq, 
+      wechat, phone_num, phone_state, 
+      locked, server_state, server_start, 
+      server_end, reg_time, reg_ip, 
+      token, cdkey)
+    values (#{userName,jdbcType=VARCHAR}, #{userPwd,jdbcType=VARCHAR}, #{qq,jdbcType=VARCHAR}, 
+      #{wechat,jdbcType=VARCHAR}, #{phoneNum,jdbcType=INTEGER}, #{phoneState,jdbcType=INTEGER}, 
+      #{locked,jdbcType=INTEGER}, #{serverState,jdbcType=INTEGER}, #{serverStart,jdbcType=TIMESTAMP}, 
+      #{serverEnd,jdbcType=TIMESTAMP}, #{regTime,jdbcType=TIMESTAMP}, #{regIp,jdbcType=VARCHAR}, 
+      #{token,jdbcType=VARCHAR}, #{cdkey,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="plan.data.sql.entity.LotteryUser">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into lottery_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="userPwd != null">
+        user_pwd,
+      </if>
+      <if test="qq != null">
+        qq,
+      </if>
+      <if test="wechat != null">
+        wechat,
+      </if>
+      <if test="phoneNum != null">
+        phone_num,
+      </if>
+      <if test="phoneState != null">
+        phone_state,
+      </if>
+      <if test="locked != null">
+        locked,
+      </if>
+      <if test="serverState != null">
+        server_state,
+      </if>
+      <if test="serverStart != null">
+        server_start,
+      </if>
+      <if test="serverEnd != null">
+        server_end,
+      </if>
+      <if test="regTime != null">
+        reg_time,
+      </if>
+      <if test="regIp != null">
+        reg_ip,
+      </if>
+      <if test="token != null">
+        token,
+      </if>
+      <if test="cdkey != null">
+        cdkey,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPwd != null">
+        #{userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null">
+        #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="wechat != null">
+        #{wechat,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNum != null">
+        #{phoneNum,jdbcType=INTEGER},
+      </if>
+      <if test="phoneState != null">
+        #{phoneState,jdbcType=INTEGER},
+      </if>
+      <if test="locked != null">
+        #{locked,jdbcType=INTEGER},
+      </if>
+      <if test="serverState != null">
+        #{serverState,jdbcType=INTEGER},
+      </if>
+      <if test="serverStart != null">
+        #{serverStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="serverEnd != null">
+        #{serverEnd,jdbcType=TIMESTAMP},
+      </if>
+      <if test="regTime != null">
+        #{regTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="regIp != null">
+        #{regIp,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="cdkey != null">
+        #{cdkey,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="plan.data.sql.entity.LotteryUser">
+    update lottery_user
+    <set>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userPwd != null">
+        user_pwd = #{userPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="qq != null">
+        qq = #{qq,jdbcType=VARCHAR},
+      </if>
+      <if test="wechat != null">
+        wechat = #{wechat,jdbcType=VARCHAR},
+      </if>
+      <if test="phoneNum != null">
+        phone_num = #{phoneNum,jdbcType=INTEGER},
+      </if>
+      <if test="phoneState != null">
+        phone_state = #{phoneState,jdbcType=INTEGER},
+      </if>
+      <if test="locked != null">
+        locked = #{locked,jdbcType=INTEGER},
+      </if>
+      <if test="serverState != null">
+        server_state = #{serverState,jdbcType=INTEGER},
+      </if>
+      <if test="serverStart != null">
+        server_start = #{serverStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="serverEnd != null">
+        server_end = #{serverEnd,jdbcType=TIMESTAMP},
+      </if>
+      <if test="regTime != null">
+        reg_time = #{regTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="regIp != null">
+        reg_ip = #{regIp,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null">
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="cdkey != null">
+        cdkey = #{cdkey,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="plan.data.sql.entity.LotteryUser">
+    update lottery_user
+    set user_name = #{userName,jdbcType=VARCHAR},
+      user_pwd = #{userPwd,jdbcType=VARCHAR},
+      qq = #{qq,jdbcType=VARCHAR},
+      wechat = #{wechat,jdbcType=VARCHAR},
+      phone_num = #{phoneNum,jdbcType=INTEGER},
+      phone_state = #{phoneState,jdbcType=INTEGER},
+      locked = #{locked,jdbcType=INTEGER},
+      server_state = #{serverState,jdbcType=INTEGER},
+      server_start = #{serverStart,jdbcType=TIMESTAMP},
+      server_end = #{serverEnd,jdbcType=TIMESTAMP},
+      reg_time = #{regTime,jdbcType=TIMESTAMP},
+      reg_ip = #{regIp,jdbcType=VARCHAR},
+      token = #{token,jdbcType=VARCHAR},
+      cdkey = #{cdkey,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
