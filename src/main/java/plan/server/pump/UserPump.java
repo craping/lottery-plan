@@ -9,34 +9,66 @@ import org.crap.jrain.core.asm.annotation.Pump;
 import org.crap.jrain.core.asm.handler.DataPump;
 import org.crap.jrain.core.bean.result.Errcode;
 import org.crap.jrain.core.bean.result.Result;
+import org.crap.jrain.core.bean.result.criteria.Data;
+import org.crap.jrain.core.bean.result.criteria.DataResult;
 import org.crap.jrain.core.error.support.Errors;
 import org.crap.jrain.core.validate.annotation.BarScreen;
 import org.crap.jrain.core.validate.annotation.Parameter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+
+import net.sf.json.JSONObject;
+import plan.data.sql.entity.LotteryUser;
+import plan.lottery.biz.server.UserServer;
+import plan.lottery.common.CustomErrors;
+import plan.lottery.utils.Tools;
 
 @Pump("user")
 @Component
-public class UserPump extends DataPump<Map<String, Object>> {
+public class UserPump extends DataPump<JSONObject> {
 	
 	public static final Logger log = LogManager.getLogger(UserPump.class);
 	
+	@Autowired
+	private StringRedisTemplate redisTemplate;
+	
+	@Autowired
+	private UserServer userServer;
+	
 	@Pipe("login")
 	@BarScreen(
-		desc="API文档",
+		desc="用户登录",
 		//security=true,
 		params= {
 			@Parameter(value="login_name",  desc="登录名"),
 			@Parameter(value="login_pwd",  desc="密码"),
 		}
 	)
-	public Errcode login (Map<String, Object> params) {
-		/*WFKUser user = userServer.getUser(params.get("login_name"), params.get("login_pwd"));
-		if (user == null)	//判断用户是否存在
-			return new Result(CustomErrors.USER_ERROR_ACCOUNT);
+	public Errcode login (JSONObject params) {
+		String userName = params.getString("login_name");
+		String userPwd = params.getString("login_pwd");
+		LotteryUser user = userServer.getUser(userName, userPwd);
+		if (user == null) {	//判断用户是否存在
+			return new Result(CustomErrors.USER_ACC_ERR);
+		} else { 
+			user.setUserPwd(null);
+		}
+		
+		String flag = "lottery_user_";
+		String old_token = user.getToken(); // 获取上一次用户token
+		String new_token = Tools.getUuid(); // 生成新的用户token
+		Map userMap = redisTemplate.opsForHash().entries(flag + old_token);
+		if (userMap == null || userMap.isEmpty()) {
+			userMap.put("userInfo", user);
+		} else {
+			redisTemplate.delete(flag+old_token);
+		}
+		
+		redisTemplate.opsForHash().putAll(flag+new_token, userMap);
+		
+		
 
-		HttpSession session = request.getSession();
-		session.setAttribute("user", user); // 设置登录状态
-		return new DataResult(Errors.OK);*/
-		return new Result(Errors.OK);
+		return new DataResult(Errors.OK, new Data(user));
 	}
 }

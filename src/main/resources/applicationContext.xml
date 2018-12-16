@@ -24,4 +24,5 @@
 	
 	<!-- 引入配置 -->
 	<import resource="classpath:applicationContext-dataSource.xml" />
+	<import resource="classpath:spring-data-redis.xml" />
 </beans>

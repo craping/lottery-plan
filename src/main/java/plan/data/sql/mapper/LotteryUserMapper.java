@@ -1,4 +1,4 @@
-package plan.data.sql.service;
+package plan.data.sql.mapper;
 
 import plan.data.sql.entity.LotteryUser;
 
