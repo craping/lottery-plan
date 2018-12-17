@@ -12,6 +12,7 @@ import org.crap.jrain.core.bean.result.Result;
 import org.crap.jrain.core.bean.result.criteria.Data;
 import org.crap.jrain.core.bean.result.criteria.DataResult;
 import org.crap.jrain.core.error.support.Errors;
+import org.crap.jrain.core.util.DateUtil;
 import org.crap.jrain.core.validate.annotation.BarScreen;
 import org.crap.jrain.core.validate.annotation.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,17 +59,22 @@ public class UserPump extends DataPump<JSONObject> {
 		String flag = "lottery_user_";
 		String old_token = user.getToken(); // 获取上一次用户token
 		String new_token = Tools.getUuid(); // 生成新的用户token
-		Map userMap = redisTemplate.opsForHash().entries(flag + old_token);
+		Map<Object, Object> userMap = redisTemplate.opsForHash().entries(flag + old_token);
 		if (userMap == null || userMap.isEmpty()) {
-			userMap.put("userInfo", user);
+			userMap.put("userName", user.getUserName());
+			userMap.put("server_end", DateUtil.formatDate("yyyyMMddHHmmss", user.getServerEnd()));
 		} else {
 			redisTemplate.delete(flag+old_token);
 		}
+		user.setToken(new_token);
 		
-		redisTemplate.opsForHash().putAll(flag+new_token, userMap);
-		
-		
-
+		// 保存用户token 持久化
+		int result = userServer.updateUser(user);
+		if (result == 1) {
+			redisTemplate.opsForHash().putAll(flag+new_token, userMap);
+		} else {
+			return new Result(CustomErrors.USER_LOGIN_ERR_EX);
+		}
 		return new DataResult(Errors.OK, new Data(user));
 	}
 }

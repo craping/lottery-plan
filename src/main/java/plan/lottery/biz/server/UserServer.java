@@ -4,6 +4,6 @@ import plan.data.sql.entity.LotteryUser;
 
 public interface UserServer {
 
-	public LotteryUser getUser(String userName, String userPwd);
-	
+	LotteryUser getUser(String userName, String userPwd);
+	int updateUser(LotteryUser user);
 }
