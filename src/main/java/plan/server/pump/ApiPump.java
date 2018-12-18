@@ -16,6 +16,7 @@ import org.crap.jrain.core.util.PackageUtil;
 import org.crap.jrain.core.validate.annotation.BarScreen;
 import org.springframework.stereotype.Component;
 
+import plan.lottery.common.Lottery;
 import plan.server.HttpServer;
 
 @Pump("api")
@@ -35,5 +36,13 @@ public class ApiPump extends DataPump<Map<String, Object>> {
 			e.printStackTrace();
 		}
 		return new Result(Errors.OK);
+	}
+	
+	public static void main (String args[]) {
+		System.out.println(Lottery.PK10.ordinal());
+		System.out.println(Lottery.PK10);
+		System.out.println(Lottery.PK10.getLotteryName());
+		System.out.println(Lottery.PK10.getSimpleName());
+		System.out.println(Lottery.getLotteryName("PK10"));
 	}
 }

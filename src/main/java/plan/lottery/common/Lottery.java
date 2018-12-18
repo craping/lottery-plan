@@ -29,10 +29,18 @@ public enum Lottery {
 		return lotteryName;
 	}
 	 
-	public static Lottery getLotteryName(String simpleName) {
+	public static Lottery getLottery(String simpleName) {
 		for (Lottery l : Lottery.values()) {
 			if (l.simpleName == simpleName)
 				return l;
+		}
+		return null;
+	}
+	
+	public static String getLotteryName(String simpleName) {
+		for (Lottery l : Lottery.values()) {
+			if (l.simpleName == simpleName)
+				return l.getLotteryName();
 		}
 		return null;
 	}

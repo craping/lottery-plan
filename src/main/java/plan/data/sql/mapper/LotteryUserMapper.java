@@ -1,5 +1,7 @@
 package plan.data.sql.mapper;
 
+import org.crap.data.dao.sql.service.Mapper;
+
 import plan.data.sql.entity.LotteryUser;
 
 public interface LotteryUserMapper extends Mapper<LotteryUser> {

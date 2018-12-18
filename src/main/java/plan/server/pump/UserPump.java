@@ -40,7 +40,6 @@ public class UserPump extends DataPump<JSONObject> {
 	@Pipe("login")
 	@BarScreen(
 		desc="用户登录",
-		//security=true,
 		params= {
 			@Parameter(value="login_name",  desc="登录名"),
 			@Parameter(value="login_pwd",  desc="密码"),
