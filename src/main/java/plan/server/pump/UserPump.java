@@ -15,6 +15,7 @@ import org.crap.jrain.core.error.support.Errors;
 import org.crap.jrain.core.util.DateUtil;
 import org.crap.jrain.core.validate.annotation.BarScreen;
 import org.crap.jrain.core.validate.annotation.Parameter;
+import org.crap.jrain.core.validate.security.component.Coder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,7 @@ import net.sf.json.JSONObject;
 import plan.data.sql.entity.LotteryUser;
 import plan.lottery.biz.server.UserServer;
 import plan.lottery.common.CustomErrors;
+import plan.lottery.common.param.TokenParam;
 import plan.lottery.utils.Tools;
 
 @Pump("user")
@@ -63,6 +65,7 @@ public class UserPump extends DataPump<JSONObject> {
 		if (userMap == null || userMap.isEmpty()) {
 			userMap.put("uid", user.getId().toString());
 			userMap.put("user_name", user.getUserName());
+			userMap.put("user_pwd", user.getUserPwd());
 			userMap.put("server_end", DateUtil.formatDate("yyyyMMddHHmmss", user.getServerEnd()));
 		} else {
 			redisTemplate.delete(flag+old_token);
@@ -86,6 +89,42 @@ public class UserPump extends DataPump<JSONObject> {
 	public Errcode logout (JSONObject params) {
 		String key = "user_" + params.getString("token");
 		redisTemplate.delete(key); // 删除缓存
+		return new DataResult(Errors.OK);
+	}
+	
+	@Pipe("changePwd")
+	@BarScreen(
+		desc="修改密码",
+		params= {
+			@Parameter(type=TokenParam.class),
+			@Parameter(value="old_pwd",  desc="当前密码"),
+			@Parameter(value="new_pwd",  desc="新密码"),
+			@Parameter(value="confirm_pwd",  desc="新密码"),
+		}
+	)
+	public Errcode changePwd (JSONObject params) {
+		String key = "user_" + params.getString("token");
+		// 获取缓存
+		Map<Object, Object> userMap = redisTemplate.opsForHash().entries(key);
+		String user_name = userMap.get("user_name").toString();
+		String user_pwd = userMap.get("user_pwd").toString();
+		if (!Coder.encryptMD5(params.getString("old_pwd")).equals(user_pwd))
+			return new Result(CustomErrors.USER_PWD_ERR);
+		
+		String new_pwd = params.getString("new_pwd");
+		String confirm_pwd = params.getString("confirm_pwd");
+		if (new_pwd != confirm_pwd && !new_pwd.equals(confirm_pwd))
+			return new Result(CustomErrors.USER_CHANGE_PWD_ERR);
+		
+		LotteryUser user = userServer.getUser(user_name, user_pwd);
+		user.setUserPwd(Coder.encryptMD5(new_pwd));
+		
+		int result = userServer.updateUser(user);
+		if (result == 1) {
+			redisTemplate.opsForHash().put(key, "user_pwd", new_pwd);
+		} else {
+			return new Result(CustomErrors.USER_OPR_ERR);
+		}
 		return new DataResult(Errors.OK);
 	}
 }

@@ -4,9 +4,13 @@ import org.crap.jrain.core.bean.result.Errcode;
 
 
 public enum CustomErrors implements Errcode {
+	
+	USER_OPR_ERR(1,100, "操作失败"),
 
 	USER_TOKEN_NULL(1,500, "请求错误，缺少参数token"),
 	USER_ACC_ERR(1,501, "用户帐号或密码错误"),
+	USER_PWD_ERR(1,502, "用户密码错误"),
+	USER_CHANGE_PWD_ERR(1,503, "确认密码不一致"),
 	USER_LOCKED_ERR(1,502, "用户状态为锁定"),
 	USER_LOGIN_ERR_EX(1,503, "登录失败，请联系管理员"),
 	USER_NOT_LOGIN(1,504, "用户未登录");
