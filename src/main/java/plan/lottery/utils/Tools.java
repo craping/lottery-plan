@@ -104,6 +104,20 @@ public class Tools {
 			return true;
 		}
 	}
+	
+	/**
+	 * @param str 1:a,2:b,3:c
+	 * @return
+	 */
+	public static Map<String, String> split(String str) {
+		Map<String, String> result = new HashMap<>();
+		String[] first = str.split(",");
+		for (int i = 0; i < first.length; i++) {
+			String[] second = first[i].split(":");
+			result.put(second[0], second[1]);
+		}
+		return result;
+	}
 
 	/**
 	 * 去除字符串的前后空格；如果字符串为null,返回空串;

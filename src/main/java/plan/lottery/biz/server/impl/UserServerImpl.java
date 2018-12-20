@@ -43,4 +43,10 @@ public class UserServerImpl implements UserServer {
 		}
 		return result;
 	}
+
+	@Override
+	public LotteryUser getUserByToken(String token) {
+		String sql = "SELECT * FROM lottery_user WHERE token=?";
+		return serviceDao.get(sql,  LotteryUser.class, new Object[]{token});
+	}
 }

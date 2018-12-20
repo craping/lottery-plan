@@ -9,11 +9,11 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.crap.jrain.core.bean.DateFormat;
 import org.crap.jrain.core.util.DateUtil;
 import org.crap.jrain.core.util.StringUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import redis.clients.jedis.BinaryClient.LIST_POSITION;
@@ -25,7 +25,7 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
 @Component
 public class RedisUtil {
 
-	private static Logger logger = LoggerFactory.getLogger(RedisUtil.class);
+	public static final Logger logger = LogManager.getLogger(RedisUtil.class);
 
 	private static JedisPool jedisPool;
 
@@ -41,7 +41,7 @@ public class RedisUtil {
 			return jedis;
 		} catch (JedisConnectionException e) {
 			logger.warn("获取Redis链接失败，Redis缓存机制将不可用");
-			 e.printStackTrace();
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -49,10 +49,8 @@ public class RedisUtil {
 	/**
 	 * 保存对象到Redis 对象不过期
 	 *
-	 * @param key
-	 *            待缓存的key
-	 * @param object
-	 *            待缓存的对象
+	 * @param key    待缓存的key
+	 * @param object 待缓存的对象
 	 * @return 返回是否缓存成功
 	 */
 	public static boolean setObject(String key, Object object) {
@@ -62,15 +60,11 @@ public class RedisUtil {
 	/**
 	 * 保存对象到Redis 并设置超时时间
 	 *
-	 * @param key
-	 *            缓存key
-	 * @param object
-	 *            缓存对象
-	 * @param timeout
-	 *            超时时间
+	 * @param key     缓存key
+	 * @param object  缓存对象
+	 * @param timeout 超时时间
 	 * @return 返回是否缓存成功
-	 * @throws Exception
-	 *             异常上抛
+	 * @throws Exception 异常上抛
 	 */
 	public static boolean setObject(String key, Object object, int timeout) {
 		String value = SerializeUtil.serialize(object);
@@ -92,8 +86,7 @@ public class RedisUtil {
 	/**
 	 * 从Redis中获取对象
 	 *
-	 * @param key
-	 *            待获取数据的key
+	 * @param key 待获取数据的key
 	 * @return 返回key对应的对象
 	 */
 	public static Object getObject(String key) {
@@ -114,10 +107,8 @@ public class RedisUtil {
 	/**
 	 * 缓存String类型的数据,数据不过期
 	 *
-	 * @param key
-	 *            待缓存数据的key
-	 * @param value
-	 *            需要缓存的额数据
+	 * @param key   待缓存数据的key
+	 * @param value 需要缓存的额数据
 	 * @return 返回是否缓存成功
 	 */
 	public static boolean setString(String key, String value) {
@@ -127,12 +118,9 @@ public class RedisUtil {
 	/**
 	 * 缓存String类型的数据并设置超时时间
 	 *
-	 * @param key
-	 *            key
-	 * @param value
-	 *            value
-	 * @param timeout
-	 *            超时时间
+	 * @param key     key
+	 * @param value   value
+	 * @param timeout 超时时间
 	 * @return 返回是否缓存成功
 	 */
 	public static boolean setString(String key, String value, int timeout) {
@@ -160,8 +148,7 @@ public class RedisUtil {
 	/**
 	 * 获取String类型的数据
 	 *
-	 * @param key
-	 *            需要获取数据的key
+	 * @param key 需要获取数据的key
 	 * @return 返回key对应的数据
 	 */
 	public static String getString(String key) {
@@ -193,8 +180,7 @@ public class RedisUtil {
 	/**
 	 * 删除缓存中的数据
 	 *
-	 * @param key
-	 *            需要删除数据的key
+	 * @param key 需要删除数据的key
 	 * @return 返回是否删除成功
 	 */
 	public static boolean del(String key) {
@@ -216,6 +202,7 @@ public class RedisUtil {
 		}
 		return result;
 	}
+
 	/**
 	 * 
 	 * 清空redis服务器所有数据
@@ -263,7 +250,6 @@ public class RedisUtil {
 		return value;
 	}
 
-	
 	public String getSet(String key, String value) {
 		Jedis jedis = null;
 		String res = null;
@@ -279,7 +265,7 @@ public class RedisUtil {
 		}
 		return res;
 	}
-	
+
 	/**
 	 * <p>
 	 * 向redis存入key和value,并释放连接资源
@@ -306,7 +292,7 @@ public class RedisUtil {
 				jedis.close();
 		}
 	}
-	
+
 	public Long expire(String key, int seconds) {
 		Jedis jedis = null;
 		try {
@@ -321,13 +307,13 @@ public class RedisUtil {
 				jedis.close();
 		}
 	}
+
 	/**
 	 * <p>
 	 * 删除指定的key,也可以传入一个包含key的数组
 	 * </p>
 	 * 
-	 * @param keys
-	 *            一个key 也可以使 string 数组
+	 * @param keys 一个key 也可以使 string 数组
 	 * @return 返回删除成功的个数
 	 */
 	public Long del(String... keys) {
@@ -344,7 +330,7 @@ public class RedisUtil {
 				jedis.close();
 		}
 	}
-	
+
 	public int delKeys(String key) {
 		Jedis jedis = null;
 		try {
@@ -363,7 +349,7 @@ public class RedisUtil {
 				jedis.close();
 		}
 	}
-	
+
 	/**
 	 * <p>
 	 * 通过key向指定的value值追加值
@@ -444,8 +430,7 @@ public class RedisUtil {
 	 * 
 	 * @param key
 	 * @param value
-	 * @param seconds
-	 *            单位:秒
+	 * @param seconds 单位:秒
 	 * @return 成功返回OK 失败和异常返回null
 	 */
 	public String setex(String key, String value, int seconds) {
@@ -492,8 +477,7 @@ public class RedisUtil {
 	 * 
 	 * @param key
 	 * @param str
-	 * @param offset
-	 *            下标位置
+	 * @param offset 下标位置
 	 * @return 返回替换后 value 的长度
 	 */
 	public Long setrange(String key, String str, int offset) {
@@ -516,8 +500,7 @@ public class RedisUtil {
 	 * 通过批量的key获取批量的value
 	 * </p>
 	 * 
-	 * @param keys
-	 *            string数组 也可以是一个key
+	 * @param keys string数组 也可以是一个key
 	 * @return 成功返回value的集合, 失败返回null的集合 ,异常返回空
 	 */
 	public List<String> mget(String... keys) {
@@ -628,8 +611,7 @@ public class RedisUtil {
 	 * </p>
 	 * 
 	 * @param key
-	 * @param startOffset
-	 *            开始位置 从0 开始 负数表示从右边开始截取
+	 * @param startOffset 开始位置 从0 开始 负数表示从右边开始截取
 	 * @param endOffset
 	 * @return 如果没有返回null
 	 */
@@ -713,7 +695,7 @@ public class RedisUtil {
 		}
 		return res;
 	}
-	
+
 	/**
 	 * <p>
 	 * 对key的值做减减操作,如果key不存在,则设置key为-1
@@ -793,8 +775,7 @@ public class RedisUtil {
 	 * </p>
 	 * 
 	 * @param key
-	 * @param field
-	 *            字段
+	 * @param field 字段
 	 * @param value
 	 * @return 如果存在返回0 异常返回null
 	 */
@@ -896,8 +877,7 @@ public class RedisUtil {
 	 * </p>
 	 * 
 	 * @param key
-	 * @param fields
-	 *            可以使 一个String 也可以是 String数组
+	 * @param fields 可以使 一个String 也可以是 String数组
 	 * @return
 	 */
 	public List<String> hmget(String key, String... fields) {
@@ -941,7 +921,7 @@ public class RedisUtil {
 		}
 		return res;
 	}
-	
+
 	public Double hincrByFloat(String key, String field, double value) {
 		Jedis jedis = null;
 		Double res = null;
@@ -957,8 +937,7 @@ public class RedisUtil {
 		}
 		return res;
 	}
-	
-	
+
 	/**
 	 * <p>
 	 * 通过key和field判断是否有指定的value存在
@@ -1015,8 +994,7 @@ public class RedisUtil {
 	 * </p>
 	 * 
 	 * @param key
-	 * @param fields
-	 *            可以是 一个 field 也可以是 一个数组
+	 * @param fields 可以是 一个 field 也可以是 一个数组
 	 * @return
 	 */
 	public Long hdel(String key, String... fields) {
@@ -1098,7 +1076,7 @@ public class RedisUtil {
 			jedis = getJedis();
 			res = jedis.hgetAll(key);
 		} catch (Exception e) {
-			
+
 			logger.error("Redis operate exception：", e);
 		} finally {
 			if (jedis != null)
@@ -1113,8 +1091,7 @@ public class RedisUtil {
 	 * </p>
 	 * 
 	 * @param key
-	 * @param strs
-	 *            可以使一个string 也可以使string数组
+	 * @param strs 可以使一个string 也可以使string数组
 	 * @return 返回list的value个数
 	 */
 	public Long lpush(String key, String... strs) {
@@ -1139,8 +1116,7 @@ public class RedisUtil {
 	 * </p>
 	 * 
 	 * @param key
-	 * @param strs
-	 *            可以使一个string 也可以使string数组
+	 * @param strs 可以使一个string 也可以使string数组
 	 * @return 返回list的value个数
 	 */
 	public Long rpush(String key, String... strs) {
@@ -1165,12 +1141,9 @@ public class RedisUtil {
 	 * </p>
 	 * 
 	 * @param key
-	 * @param where
-	 *            LIST_POSITION枚举类型
-	 * @param pivot
-	 *            list里面的value
-	 * @param value
-	 *            添加的value
+	 * @param where LIST_POSITION枚举类型
+	 * @param pivot list里面的value
+	 * @param value 添加的value
 	 * @return
 	 */
 	public Long linsert(String key, LIST_POSITION where, String pivot, String value) {
@@ -1198,8 +1171,7 @@ public class RedisUtil {
 	 * </p>
 	 * 
 	 * @param key
-	 * @param index
-	 *            从0开始
+	 * @param index 从0开始
 	 * @param value
 	 * @return 成功返回OK
 	 */
@@ -1225,8 +1197,7 @@ public class RedisUtil {
 	 * </p>
 	 * 
 	 * @param key
-	 * @param count
-	 *            当count为0时删除全部
+	 * @param count 当count为0时删除全部
 	 * @param value
 	 * @return 返回被删除的个数
 	 */
@@ -1432,8 +1403,7 @@ public class RedisUtil {
 	 * </p>
 	 * 
 	 * @param key
-	 * @param members
-	 *            可以是一个String 也可以是一个String数组
+	 * @param members 可以是一个String 也可以是一个String数组
 	 * @return 添加成功的个数
 	 */
 	public Long sadd(String key, String... members) {
@@ -1458,8 +1428,7 @@ public class RedisUtil {
 	 * </p>
 	 * 
 	 * @param key
-	 * @param members
-	 *            可以是一个String 也可以是一个String数组
+	 * @param members 可以是一个String 也可以是一个String数组
 	 * @return 删除的个数
 	 */
 	public Long srem(String key, String... members) {
@@ -1510,8 +1479,7 @@ public class RedisUtil {
 	 * 以第一个set为标准
 	 * </p>
 	 * 
-	 * @param keys
-	 *            可以使一个string 则返回set中所有的value 也可以是string数组
+	 * @param keys 可以使一个string 则返回set中所有的value 也可以是string数组
 	 * @return
 	 */
 	public Set<String> sdiff(String... keys) {
@@ -1538,10 +1506,8 @@ public class RedisUtil {
 	 * 以第一个set为标准
 	 * </p>
 	 * 
-	 * @param dstkey
-	 *            差集存入的key
-	 * @param keys
-	 *            可以使一个string 则返回set中所有的value 也可以是string数组
+	 * @param dstkey 差集存入的key
+	 * @param keys   可以使一个string 则返回set中所有的value 也可以是string数组
 	 * @return
 	 */
 	public Long sdiffstore(String dstkey, String... keys) {
@@ -1565,8 +1531,7 @@ public class RedisUtil {
 	 * 通过key获取指定set中的交集
 	 * </p>
 	 * 
-	 * @param keys
-	 *            可以使一个string 也可以是一个string数组
+	 * @param keys 可以使一个string 也可以是一个string数组
 	 * @return
 	 */
 	public Set<String> sinter(String... keys) {
@@ -1591,8 +1556,7 @@ public class RedisUtil {
 	 * </p>
 	 * 
 	 * @param dstkey
-	 * @param keys
-	 *            可以使一个string 也可以是一个string数组
+	 * @param keys   可以使一个string 也可以是一个string数组
 	 * @return
 	 */
 	public Long sinterstore(String dstkey, String... keys) {
@@ -1616,8 +1580,7 @@ public class RedisUtil {
 	 * 通过key返回所有set的并集
 	 * </p>
 	 * 
-	 * @param keys
-	 *            可以使一个string 也可以是一个string数组
+	 * @param keys 可以使一个string 也可以是一个string数组
 	 * @return
 	 */
 	public Set<String> sunion(String... keys) {
@@ -1641,8 +1604,7 @@ public class RedisUtil {
 	 * </p>
 	 * 
 	 * @param dstkey
-	 * @param keys
-	 *            可以使一个string 也可以是一个string数组
+	 * @param keys   可以使一个string 也可以是一个string数组
 	 * @return
 	 */
 	public Long sunionstore(String dstkey, String... keys) {
@@ -1665,12 +1627,9 @@ public class RedisUtil {
 	 * 通过key将set中的value移除并添加到第二个set中
 	 * </p>
 	 * 
-	 * @param srckey
-	 *            需要移除的
-	 * @param dstkey
-	 *            添加的
-	 * @param member
-	 *            set中的value
+	 * @param srckey 需要移除的
+	 * @param dstkey 添加的
+	 * @param member set中的value
 	 * @return
 	 */
 	public Long smove(String srckey, String dstkey, String member) {
@@ -1842,8 +1801,7 @@ public class RedisUtil {
 	 * </p>
 	 * 
 	 * @param key
-	 * @param members
-	 *            可以使一个string 也可以是一个string数组
+	 * @param members 可以使一个string 也可以是一个string数组
 	 * @return
 	 */
 	public Long zrem(String key, String... members) {
@@ -2194,17 +2152,7 @@ public class RedisUtil {
 		}
 		return res;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	public static void setKV(Jedis jedis, String id, Object obj) {
 		Class<?> clazz = obj.getClass();
 		String name = StringUtil.toHungarian(clazz.getSimpleName());
@@ -2219,15 +2167,15 @@ public class RedisUtil {
 					String field = StringUtil.toHungarian(method.getName().replace("get", ""));
 					Object valueObj = method.invoke(obj);
 					String value = String.valueOf(valueObj);
-					
-					if(valueObj != null && !StringUtil.isBlank(value)){
-						if(method.getReturnType().equals(Date.class)){
-							value = DateUtil.formatDate(DateFormat.Y_M_D$H_M_S_sss, (Date)valueObj);
-						}else{
+
+					if (valueObj != null && !StringUtil.isBlank(value)) {
+						if (method.getReturnType().equals(Date.class)) {
+							value = DateUtil.formatDate(DateFormat.Y_M_D$H_M_S_sss, (Date) valueObj);
+						} else {
 							value = String.valueOf(valueObj);
 						}
 					}
-					
+
 //					System.out.println(field + "=" + value);
 					pl.hset(name + "." + id, field, value);
 				}
@@ -2244,7 +2192,7 @@ public class RedisUtil {
 		String name = StringUtil.toHungarian(clazz.getSimpleName());
 
 		Method[] methods = clazz.getMethods();
-		
+
 		Pipeline pl = jedis.pipelined();
 		try {
 			String id = String.valueOf(clazz.getMethod("getId").invoke(obj));
@@ -2255,11 +2203,11 @@ public class RedisUtil {
 					String field = StringUtil.toHungarian(method.getName().replace("get", ""));
 					Object valueObj = method.invoke(obj);
 					String value = String.valueOf(valueObj);
-					
-					if(valueObj != null && !StringUtil.isBlank(value)){
-						if(method.getReturnType().equals(Date.class)){
-							value = DateUtil.formatDate(DateFormat.Y_M_D$H_M_S_sss, (Date)valueObj);
-						}else{
+
+					if (valueObj != null && !StringUtil.isBlank(value)) {
+						if (method.getReturnType().equals(Date.class)) {
+							value = DateUtil.formatDate(DateFormat.Y_M_D$H_M_S_sss, (Date) valueObj);
+						} else {
 							value = String.valueOf(valueObj);
 						}
 					}
@@ -2267,12 +2215,13 @@ public class RedisUtil {
 					pl.hset(name + "." + id, field, value);
 				}
 			}
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
+				| SecurityException e) {
 			e.printStackTrace();
 		}
 		pl.sync();
 	}
-	
+
 	public void save(String id, Object obj) {
 		Class<?> clazz = obj.getClass();
 		String name = StringUtil.toHungarian(clazz.getSimpleName());
@@ -2285,15 +2234,15 @@ public class RedisUtil {
 					String field = StringUtil.toHungarian(method.getName().replace("get", ""));
 					Object valueObj = method.invoke(obj);
 					String value = String.valueOf(valueObj);
-					if(valueObj != null && !StringUtil.isBlank(value)){
-						if(method.getReturnType().equals(Date.class)){
-							value = DateUtil.formatDate(DateFormat.Y_M_D$H_M_S_sss, (Date)valueObj);
-						}else{
+					if (valueObj != null && !StringUtil.isBlank(value)) {
+						if (method.getReturnType().equals(Date.class)) {
+							value = DateUtil.formatDate(DateFormat.Y_M_D$H_M_S_sss, (Date) valueObj);
+						} else {
 							value = String.valueOf(valueObj);
 						}
 					}
 					jedis.hset(name + "." + id, field, value);
-					
+
 				}
 			}
 		} catch (Exception e) {
@@ -2303,7 +2252,7 @@ public class RedisUtil {
 				jedis.close();
 		}
 	}
-	
+
 	public void update(String id, Object obj) {
 		Class<?> clazz = obj.getClass();
 		String name = StringUtil.toHungarian(clazz.getSimpleName());
@@ -2316,15 +2265,15 @@ public class RedisUtil {
 					String field = StringUtil.toHungarian(method.getName().replace("get", ""));
 					Object valueObj = method.invoke(obj);
 					String value = String.valueOf(valueObj);
-					if(valueObj != null && !StringUtil.isBlank(value)){
-						if(method.getReturnType().equals(Date.class)){
+					if (valueObj != null && !StringUtil.isBlank(value)) {
+						if (method.getReturnType().equals(Date.class)) {
 							value = DateUtil.formatDate(DateFormat.Y_M_D$H_M_S_sss, (Date) method.invoke(obj));
-						}else{
+						} else {
 							value = String.valueOf(method.invoke(obj));
 						}
 						jedis.hset(name + "." + id, field, value);
 					}
-					
+
 				}
 			}
 		} catch (Exception e) {

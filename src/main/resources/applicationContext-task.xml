@@ -19,11 +19,12 @@
 		http://www.springframework.org/schema/task/spring-task-4.1.xsd ">
 
 	<context:annotation-config />
-	<!-- 自动扫描所有注解该路径 -->
-	<context:component-scan base-package="plan" />
 	
-	<!-- 引入配置 -->
-	<import resource="classpath:applicationContext-dataSource.xml" />
-	<import resource="classpath:applicationContext-task.xml" />
-	<import resource="classpath:spring-data-redis.xml" />
+	<!-- 自动扫描所有注解该路径 -->
+	<context:component-scan base-package="plan.lottery.schedule" />
+	
+	<task:executor id="executor" pool-size="5" />  
+	<task:scheduler id="scheduler" pool-size="10" />  
+	<task:annotation-driven executor="executor" scheduler="scheduler" />
+	
 </beans>

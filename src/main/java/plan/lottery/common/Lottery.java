@@ -31,7 +31,7 @@ public enum Lottery {
 	 
 	public static Lottery getLottery(String simpleName) {
 		for (Lottery l : Lottery.values()) {
-			if (l.simpleName == simpleName)
+			if (l.simpleName.equals(simpleName))
 				return l;
 		}
 		return null;
@@ -39,7 +39,7 @@ public enum Lottery {
 	
 	public static String getLotteryName(String simpleName) {
 		for (Lottery l : Lottery.values()) {
-			if (l.simpleName == simpleName)
+			if (l.simpleName.equals(simpleName))
 				return l.getLotteryName();
 		}
 		return null;

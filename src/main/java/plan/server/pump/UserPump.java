@@ -55,12 +55,14 @@ public class UserPump extends DataPump<JSONObject> {
 			user.setUserPwd(null);
 		}
 		
-		String flag = "lottery_user_";
+		String flag = "user_";
 		String old_token = user.getToken(); // 获取上一次用户token
 		String new_token = Tools.getUuid(); // 生成新的用户token
+	
 		Map<Object, Object> userMap = redisTemplate.opsForHash().entries(flag + old_token);
 		if (userMap == null || userMap.isEmpty()) {
-			userMap.put("userName", user.getUserName());
+			userMap.put("uid", user.getId().toString());
+			userMap.put("user_name", user.getUserName());
 			userMap.put("server_end", DateUtil.formatDate("yyyyMMddHHmmss", user.getServerEnd()));
 		} else {
 			redisTemplate.delete(flag+old_token);
@@ -75,5 +77,15 @@ public class UserPump extends DataPump<JSONObject> {
 			return new Result(CustomErrors.USER_LOGIN_ERR_EX);
 		}
 		return new DataResult(Errors.OK, new Data(user));
+	}
+	
+	@Pipe("logout")
+	@BarScreen(
+		desc="用户退出"
+	)
+	public Errcode logout (JSONObject params) {
+		String key = "user_" + params.getString("token");
+		redisTemplate.delete(key); // 删除缓存
+		return new DataResult(Errors.OK);
 	}
 }

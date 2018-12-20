@@ -24,15 +24,15 @@
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
-		<sqlMapGenerator targetPackage="plan.data.sql.mapper" targetProject="lottery-plan/src/main/java">
+		<sqlMapGenerator targetPackage="plan.data.sql.mapping" targetProject="lottery-plan/src/main/java">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 
-		<javaClientGenerator type="XMLMAPPER" targetPackage="plan.data.sql.service" targetProject="lottery-plan/src/main/java">
+		<javaClientGenerator type="XMLMAPPER" targetPackage="plan.data.sql.mapper" targetProject="lottery-plan/src/main/java">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 
-		<table tableName="lottery_user" domainObjectName="LotteryUser" 
+		<table tableName="lottery_betting" domainObjectName="LotteryBetting" 
 			enableCountByExample="false" enableSelectByExample="false" 
 			enableUpdateByExample="false" enableDeleteByExample="false">
 			<generatedKey column="id" sqlStatement="MySql" identity="true"/>
