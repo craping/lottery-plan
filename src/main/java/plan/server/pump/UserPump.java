@@ -13,6 +13,7 @@ import org.crap.jrain.core.bean.result.criteria.Data;
 import org.crap.jrain.core.bean.result.criteria.DataResult;
 import org.crap.jrain.core.error.support.Errors;
 import org.crap.jrain.core.util.DateUtil;
+import org.crap.jrain.core.util.StringUtil;
 import org.crap.jrain.core.validate.annotation.BarScreen;
 import org.crap.jrain.core.validate.annotation.Parameter;
 import org.crap.jrain.core.validate.security.component.Coder;
@@ -53,13 +54,11 @@ public class UserPump extends DataPump<JSONObject> {
 		LotteryUser user = userServer.getUser(userName, userPwd);
 		if (user == null) {	//判断用户是否存在
 			return new Result(CustomErrors.USER_ACC_ERR);
-		} else { 
-			user.setUserPwd(null);
 		}
 		
 		String flag = "user_";
 		String old_token = user.getToken(); // 获取上一次用户token
-		String new_token = Tools.getUuid(); // 生成新的用户token
+		String new_token = StringUtil.uuid(); // 生成新的用户token
 	
 		Map<Object, Object> userMap = redisTemplate.opsForHash().entries(flag + old_token);
 		if (userMap == null || userMap.isEmpty()) {
