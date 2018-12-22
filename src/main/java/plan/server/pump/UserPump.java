@@ -53,8 +53,6 @@ public class UserPump extends DataPump<JSONObject> {
 		LotteryUser user = userServer.getUser(userName, userPwd);
 		if (user == null) {	//判断用户是否存在
 			return new Result(CustomErrors.USER_ACC_ERR);
-		} else { 
-			user.setUserPwd(null);
 		}
 		
 		String flag = "user_";
