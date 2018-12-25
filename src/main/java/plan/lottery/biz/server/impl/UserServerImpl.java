@@ -1,5 +1,7 @@
 package plan.lottery.biz.server.impl;
 
+import java.util.Date;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.crap.data.dao.sql.util.support.ServiceDao;
@@ -11,12 +13,12 @@ import plan.lottery.biz.server.UserServer;
 
 @Service
 public class UserServerImpl implements UserServer {
-	
+
 	public static final Logger log = LogManager.getLogger(UserServerImpl.class);
 
 	@Autowired
 	private ServiceDao serviceDao;
-	
+
 	public ServiceDao getServiceDao() {
 		return serviceDao;
 	}
@@ -27,8 +29,8 @@ public class UserServerImpl implements UserServer {
 
 	@Override
 	public LotteryUser getUser(String userName, String userPwd) {
-		String sql = "SELECT * FROM lottery_user WHERE user_name=? and user_pwd=md5(?)";
-		return serviceDao.get(sql,  LotteryUser.class, new Object[]{userName, userPwd});
+		String sql = "SELECT * FROM lottery_user WHERE user_name=? and user_pwd=?";
+		return serviceDao.get(sql, LotteryUser.class, new Object[] { userName, userPwd });
 	}
 
 	@Override
@@ -36,7 +38,7 @@ public class UserServerImpl implements UserServer {
 		int result = 0;
 		try {
 			serviceDao.getMapper().update(user);
-			result = 1; 
+			result = 1;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			log.error("用户更新异常:", ex);
@@ -47,6 +49,12 @@ public class UserServerImpl implements UserServer {
 	@Override
 	public LotteryUser getUserByToken(String token) {
 		String sql = "SELECT * FROM lottery_user WHERE token=?";
-		return serviceDao.get(sql,  LotteryUser.class, new Object[]{token});
+		return serviceDao.get(sql, LotteryUser.class, new Object[] { token });
+	}
+
+	@Override
+	public int insertLoginLog(Integer uid, String ip) {
+		String sql = "INSERT INTO lottery_user_login (uid,ip) VALUES (?,?)";
+		return serviceDao.execute(sql, new Object[] { uid, ip });
 	}
 }

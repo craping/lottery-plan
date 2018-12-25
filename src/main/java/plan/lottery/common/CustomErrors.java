@@ -6,6 +6,7 @@ import org.crap.jrain.core.bean.result.Errcode;
 public enum CustomErrors implements Errcode {
 	
 	USER_OPR_ERR(1,100, "操作失败"),
+	PLAN_OPR_ERR(-9,100, "后台计划方案为空！"),
 
 	USER_TOKEN_NULL(1,500, "请求错误，缺少参数token"),
 	USER_ACC_ERR(1,501, "用户帐号或密码错误"),

@@ -1,7 +1,12 @@
 package plan.server.pump;
 
 import java.io.IOException;
+import java.security.interfaces.RSAPublicKey;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -15,16 +20,19 @@ import org.crap.jrain.core.bean.result.criteria.Data;
 import org.crap.jrain.core.bean.result.criteria.DataResult;
 import org.crap.jrain.core.error.support.Errors;
 import org.crap.jrain.core.util.PackageUtil;
+import org.crap.jrain.core.validate.DataBarScreen;
 import org.crap.jrain.core.validate.annotation.BarScreen;
+import org.crap.jrain.core.validate.security.component.Coder;
 import org.springframework.stereotype.Component;
 
+import io.netty.channel.Channel;
+import io.netty.handler.codec.http.FullHttpRequest;
 import net.sf.json.JSONObject;
-import plan.lottery.common.Lottery;
 import plan.server.HttpServer;
 
 @Pump("api")
 @Component
-public class ApiPump extends DataPump<Map<String, Object>> {
+public class ApiPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	
 	public static final Logger log = LogManager.getLogger(ApiPump.class);
 	
@@ -41,31 +49,37 @@ public class ApiPump extends DataPump<Map<String, Object>> {
 		return new Result(Errors.OK);
 	}
 	
+	@Pipe("getPublicKey")
+	@BarScreen(desc="随机获取公钥")
+	public Errcode publicKey (JSONObject params) {
+		int index = (int)(Math.random()*DataBarScreen.KPCOLLECTION.getTotal());
+		RSAPublicKey publicKey = (RSAPublicKey)DataBarScreen.KPCOLLECTION.get(index).getPublic();
+
+		Map<String, Object> key = new HashMap<>();
+		key.put("id", index);
+		key.put("n", publicKey.getModulus().toString());
+		key.put("e", publicKey.getPublicExponent().toString());
+		try {
+			key.put("publicKey", Coder.encryptBASE64(publicKey.getEncoded()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new DataResult(Errors.OK, new Data(key));
+	}
+	
 	public static void main (String args[]) throws IOException {
-		System.out.println(Lottery.PK10.ordinal());
-		System.out.println(Lottery.PK10);
-		System.out.println(Lottery.PK10.getLotteryName());
-		System.out.println(Lottery.PK10.getSimpleName());
-		System.out.println(Lottery.getLotteryName("PK10"));
-		
-		Map<String, String> info = new HashMap<>();
-		info.put("uid", "a");
-		info.put("lottery_type", "b");
-		info.put("bet_type", "c");
-		info.put("bet_period", "d");
-		info.put("bet_schema", "e");
-		info.put("bet_amount", "f");
-		System.out.println(info);
-		
-		JSONObject jsonStr = JSONObject.fromObject(info);
-		System.out.println(jsonStr.toString());
-		Map map = jsonStr;
-		System.out.println(map);
-		System.out.println(map.get("bet_type"));
-		System.out.println(JSONObject.fromObject(info));
-		
-		String num = "1|2|3|4|5|6|7|8||10";
-		String ns[] = num.split("\\|");
-		System.out.println(ns.length);
+
+		String s = "DWD_1_2_f36a3686e50b41f1f9cbaa058ba50e89";
+		System.out.println(s.indexOf("DWD_1_2_") > -1);
+		System.out.println(s.indexOf("DWD_2_2_") > -1);
+		List<Integer> list = new ArrayList<>();
+		list.add(9);
+		list.add(5);
+		list.add(6);
+		list.add(1);
+		System.out.println(list.toString());
+		Collections.sort(list);
+		System.out.println(list.toString());
+		System.out.println(list.get(list.size()-1));
 	}
 }

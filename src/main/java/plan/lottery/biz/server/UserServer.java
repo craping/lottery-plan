@@ -9,4 +9,6 @@ public interface UserServer {
 	LotteryUser getUserByToken(String token);
 
 	int updateUser(LotteryUser user);
+	
+	int insertLoginLog(Integer uid, String ip);
 }

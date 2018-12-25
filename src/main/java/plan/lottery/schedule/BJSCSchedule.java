@@ -41,10 +41,10 @@ public class BJSCSchedule {
 		BJSCResutVO resultVo = JsoupUtil.BJSCReslut();
 		String lottery_reslut = StringUtils.join(resultVo.getResult(), ","); // 开奖结果
 		log.info("########## 开奖内容：" + lottery_reslut);
-		String key = "user_betting_" + resultVo.getPeriod();
+		String key = "betting_" + resultVo.getPeriod();
 		
 		// 获取用户投注记录
-		List<String> l = redisTemplate.opsForList().range("user_betting_721336", 0, -1);
+		List<String> l = redisTemplate.opsForList().range("betting_721336", 0, -1);
 		log.info("########## 投注记录：" + l.size());
 		
 		if (l.size() > 0) {
@@ -59,21 +59,21 @@ public class BJSCSchedule {
 				Integer uid = Integer.parseInt(userMap.get("uid").toString());
 				String user_name = userMap.get("user_name").toString();
 				String bet_type = record.getString("bet_type"); // 投注类型
-				String bet_schema = record.getString("bet_schema"); // 投注方案
-				String bet_amount = record.getString("bet_amount");
-				Integer bet_position = Integer.parseInt(record.getString("bet_position"));
-				BigDecimal bonus_amount = new BigDecimal("0.00");
+				String schema = record.getString("schema"); 	// 投注方案
+				String amount = record.getString("amount");		// 投注金额
+				Integer position = record.getInt("position");
+				BigDecimal bonus = new BigDecimal("0.00");
 				
 				// 判断是否中奖
-				int isWin = BJSCPlayType.getPlayType(bet_type).calcWinUnit(resultVo, bet_position, bet_schema);
+				int isWin = BJSCPlayType.getPlayType(bet_type).calcWinUnit(resultVo, position, schema);
 				if (isWin == 1) {
 					// 计算奖金
 					if (bet_type.equals(BJSCPlayType.GYH.getSimpleName())) {
-						Map<String, String> map = Tools.split(bet_schema);
-						bet_schema = map.keySet().toString().replace("[","").replace("]", "");
-						bonus_amount = new BigDecimal(Arith.mul(bet_amount, map.get(resultVo.getGyh())));
+						Map<String, String> map = Tools.split(schema);
+						schema = map.keySet().toString().replace("[","").replace("]", "");
+						bonus = new BigDecimal(Arith.mul(amount, map.get(resultVo.getGyh())));
 					} else {
-						bonus_amount = new BigDecimal(Arith.mul(bet_amount, record.getString("bet_rate")));
+						bonus = new BigDecimal(Arith.mul(amount, record.getString("rate")));
 					}
 				}
 				
@@ -83,13 +83,13 @@ public class BJSCSchedule {
 				betting.setLotteryType(record.getString("lottery_type"));
 				betting.setLotteryResult(lottery_reslut);
 				betting.setBetType(bet_type);
-				betting.setBetPeriod(record.getString("bet_period"));
-				betting.setBetSchema(bet_schema);
-				betting.setBetPosition(bet_position);
-				betting.setBetTime(DateUtil.parseDate(record.getString("bet_time"), "yyyyMMddHHmmss"));
-				betting.setBetAmount(new BigDecimal(bet_amount));
-				betting.setBetRate(new BigDecimal(record.getString("bet_rate")));
-				betting.setBonusAmount(bonus_amount);
+				betting.setPeriod(record.getString("period"));
+				betting.setSchema(schema);
+				betting.setPosition(position);
+				betting.setTime(DateUtil.parseDate(record.getString("time"), "yyyyMMddHHmmss"));
+				betting.setAmount(new BigDecimal(amount));
+				betting.setRate(new BigDecimal(record.getString("rate")));
+				betting.setBonus(bonus);
 				betting.setWin(isWin);
 				bettingList.add(betting);
 			}

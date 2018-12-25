@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="plan.data.sql.mapper.LotteryPlanMapper">
+  <resultMap id="BaseResultMap" type="plan.data.sql.entity.LotteryPlan">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="bet_type" jdbcType="VARCHAR" property="betType" />
+    <result column="bet_count" jdbcType="VARCHAR" property="betCount" />
+    <result column="period" jdbcType="VARCHAR" property="period" />
+    <result column="position" jdbcType="INTEGER" property="position" />
+    <result column="schema" jdbcType="VARCHAR" property="schema" />
+    <result column="time" jdbcType="TIMESTAMP" property="time" />
+    <result column="result" jdbcType="VARCHAR" property="result" />
+    <result column="win_period" jdbcType="VARCHAR" property="winPeriod" />
+    <result column="win" jdbcType="VARCHAR" property="win" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, bet_type, bet_count, period, position, schema, time, result, win_period, 
+    win
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from lottery_plan
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from lottery_plan
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="plan.data.sql.entity.LotteryPlan">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into lottery_plan (name, bet_type, bet_count, 
+      period, position, schema, 
+      time, result, win_period, 
+      win)
+    values (#{name,jdbcType=VARCHAR}, #{betType,jdbcType=VARCHAR}, #{betCount,jdbcType=VARCHAR}, 
+      #{period,jdbcType=VARCHAR}, #{position,jdbcType=INTEGER}, #{schema,jdbcType=VARCHAR}, 
+      #{time,jdbcType=TIMESTAMP}, #{result,jdbcType=VARCHAR}, #{winPeriod,jdbcType=VARCHAR}, 
+      #{win,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="plan.data.sql.entity.LotteryPlan">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into lottery_plan
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="betType != null">
+        bet_type,
+      </if>
+      <if test="betCount != null">
+        bet_count,
+      </if>
+      <if test="period != null">
+        period,
+      </if>
+      <if test="position != null">
+        position,
+      </if>
+      <if test="schema != null">
+        schema,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+      <if test="result != null">
+        result,
+      </if>
+      <if test="winPeriod != null">
+        win_period,
+      </if>
+      <if test="win != null">
+        win,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="betType != null">
+        #{betType,jdbcType=VARCHAR},
+      </if>
+      <if test="betCount != null">
+        #{betCount,jdbcType=VARCHAR},
+      </if>
+      <if test="period != null">
+        #{period,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        #{position,jdbcType=INTEGER},
+      </if>
+      <if test="schema != null">
+        #{schema,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="result != null">
+        #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="winPeriod != null">
+        #{winPeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="win != null">
+        #{win,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="plan.data.sql.entity.LotteryPlan">
+    update lottery_plan
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="betType != null">
+        bet_type = #{betType,jdbcType=VARCHAR},
+      </if>
+      <if test="betCount != null">
+        bet_count = #{betCount,jdbcType=VARCHAR},
+      </if>
+      <if test="period != null">
+        period = #{period,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        position = #{position,jdbcType=INTEGER},
+      </if>
+      <if test="schema != null">
+        schema = #{schema,jdbcType=VARCHAR},
+      </if>
+      <if test="time != null">
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="result != null">
+        result = #{result,jdbcType=VARCHAR},
+      </if>
+      <if test="winPeriod != null">
+        win_period = #{winPeriod,jdbcType=VARCHAR},
+      </if>
+      <if test="win != null">
+        win = #{win,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="plan.data.sql.entity.LotteryPlan">
+    update lottery_plan
+    set name = #{name,jdbcType=VARCHAR},
+      bet_type = #{betType,jdbcType=VARCHAR},
+      bet_count = #{betCount,jdbcType=VARCHAR},
+      period = #{period,jdbcType=VARCHAR},
+      position = #{position,jdbcType=INTEGER},
+      schema = #{schema,jdbcType=VARCHAR},
+      time = #{time,jdbcType=TIMESTAMP},
+      result = #{result,jdbcType=VARCHAR},
+      win_period = #{winPeriod,jdbcType=VARCHAR},
+      win = #{win,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -7,9 +7,9 @@ public enum BJSCPlayType {
 
 	DWD("DWD", "定位胆") {
 		@Override
-		public int calcWinUnit(BJSCResutVO resultVo, Integer bet_position, String bet_schema) {
+		public int calcWinUnit(BJSCResutVO resultVo, Integer position, String schema) {
 			String[] result = resultVo.getResult(); // 开奖结果
-			if (bet_schema.contains(result[bet_position-1])) { // 中奖
+			if (schema.contains(result[position-1])) { // 中奖
 				return 1;
 			}
 			return 0;
@@ -17,9 +17,9 @@ public enum BJSCPlayType {
 	},
 	LH("LH", "前五龙虎") {
 		@Override
-		public int calcWinUnit(BJSCResutVO resultVo, Integer bet_position, String bet_schema) {
+		public int calcWinUnit(BJSCResutVO resultVo, Integer position, String schema) {
 			String[] result = resultVo.getLh();
-			if ((PlayTypeLH.getPlayType(bet_schema).getTypeName()).equals(result[bet_position-1])) { // 中奖
+			if ((PlayTypeLH.getPlayType(schema).getTypeName()).equals(result[position-1])) { // 中奖
 				return 1;
 			}
 			return 0;
@@ -27,9 +27,9 @@ public enum BJSCPlayType {
 	},
 	GYH("GYH", "冠亚和") {
 		@Override
-		public int calcWinUnit(BJSCResutVO resultVo, Integer bet_position, String bet_schema) {
+		public int calcWinUnit(BJSCResutVO resultVo, Integer position, String schema) {
 			String result = resultVo.getGyh();
-			if ((Tools.split(bet_schema).keySet().toString()).contains(result)) {
+			if ((Tools.split(schema).keySet().toString()).contains(result)) {
 				return 1;
 			}
 			return 0;
@@ -37,9 +37,9 @@ public enum BJSCPlayType {
 	},
 	GYHDS("GYHDS", "冠亚和单双") {
 		@Override
-		public int calcWinUnit(BJSCResutVO resultVo, Integer bet_position, String bet_schema) {
+		public int calcWinUnit(BJSCResutVO resultVo, Integer position, String schema) {
 			String result = resultVo.getGyhds();
-			if ((PlayTypeDS.getPlayType(bet_schema).getTypeName()).equals(result)) {
+			if ((PlayTypeDS.getPlayType(schema).getTypeName()).equals(result)) {
 				return 1;
 			}
 			return 0;
@@ -47,9 +47,9 @@ public enum BJSCPlayType {
 	},
 	GYHDX("GYHDX", "冠亚和大小") {
 		@Override
-		public int calcWinUnit(BJSCResutVO resultVo, Integer bet_position, String bet_schema) {
+		public int calcWinUnit(BJSCResutVO resultVo, Integer position, String schema) {
 			String result = resultVo.getGyhdx();
-			if ((PlayTypeDX.getPlayType(bet_schema).getTypeName()).equals(result)) {
+			if ((PlayTypeDX.getPlayType(schema).getTypeName()).equals(result)) {
 				return 1;
 			}
 			return 0;
@@ -86,5 +86,5 @@ public enum BJSCPlayType {
 	 * @param bet_position 投注位置
 	 * @return 1中奖0未中奖
 	 */
-	public abstract int calcWinUnit(BJSCResutVO resultVo, Integer bet_position, String bet_schema);
+	public abstract int calcWinUnit(BJSCResutVO resultVo, Integer position, String schema);
 }

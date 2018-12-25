@@ -1,5 +1,7 @@
 package plan.server.pump;
 
+import java.net.InetSocketAddress;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,21 +18,21 @@ import org.crap.jrain.core.util.DateUtil;
 import org.crap.jrain.core.util.StringUtil;
 import org.crap.jrain.core.validate.annotation.BarScreen;
 import org.crap.jrain.core.validate.annotation.Parameter;
-import org.crap.jrain.core.validate.security.component.Coder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import io.netty.channel.Channel;
+import io.netty.handler.codec.http.FullHttpRequest;
 import net.sf.json.JSONObject;
 import plan.data.sql.entity.LotteryUser;
 import plan.lottery.biz.server.UserServer;
 import plan.lottery.common.CustomErrors;
 import plan.lottery.common.param.TokenParam;
-import plan.lottery.utils.Tools;
 
 @Pump("user")
 @Component
-public class UserPump extends DataPump<JSONObject> {
+public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	
 	public static final Logger log = LogManager.getLogger(UserPump.class);
 	
@@ -49,6 +51,10 @@ public class UserPump extends DataPump<JSONObject> {
 		}
 	)
 	public Errcode login (JSONObject params) {
+		
+		redisTemplate.opsForHash().putAll("plan_current", new HashMap<Object, Object>());
+		redisTemplate.opsForHash().putAll("plan_history", new HashMap<Object, Object>());
+		
 		String userName = params.getString("login_name");
 		String userPwd = params.getString("login_pwd");
 		LotteryUser user = userServer.getUser(userName, userPwd);
@@ -57,8 +63,8 @@ public class UserPump extends DataPump<JSONObject> {
 		}
 		
 		String flag = "user_";
-		String old_token = user.getToken(); // 获取上一次用户token
-		String new_token = StringUtil.uuid(); // 生成新的用户token
+		String old_token = user.getToken(); 	// 获取上一次用户token
+		String new_token = StringUtil.uuid(); 	// 生成新的用户token
 	
 		Map<Object, Object> userMap = redisTemplate.opsForHash().entries(flag + old_token);
 		if (userMap == null || userMap.isEmpty()) {
@@ -74,10 +80,16 @@ public class UserPump extends DataPump<JSONObject> {
 		// 保存用户token 持久化
 		int result = userServer.updateUser(user);
 		if (result == 1) {
+			userServer.insertLoginLog(user.getId(), "127.0.0.1");
 			redisTemplate.opsForHash().putAll(flag+new_token, userMap);
 		} else {
 			return new Result(CustomErrors.USER_LOGIN_ERR_EX);
 		}
+		
+		redisTemplate.opsForHash().putAll("plan_current", userMap);
+		redisTemplate.opsForHash().putAll("plan_history", userMap);
+		
+		user.setUserPwd(null);
 		return new DataResult(Errors.OK, new Data(user));
 	}
 	
@@ -91,6 +103,17 @@ public class UserPump extends DataPump<JSONObject> {
 		return new DataResult(Errors.OK);
 	}
 	
+	@Pipe("getUserInfo")
+	@BarScreen(
+		desc="获取用户信息"
+	)
+	public Errcode getUserInfo (JSONObject params) {
+		String key = "user_" + params.getString("token");
+		Map<Object, Object> userMap = redisTemplate.opsForHash().entries(key);
+		userMap.remove("user_pwd");
+		return new DataResult(Errors.OK, new Data(userMap));
+	}
+	
 	@Pipe("changePwd")
 	@BarScreen(
 		desc="修改密码",
@@ -102,12 +125,16 @@ public class UserPump extends DataPump<JSONObject> {
 		}
 	)
 	public Errcode changePwd (JSONObject params) {
+		
+		InetSocketAddress insocket = (InetSocketAddress) getResponse().remoteAddress();
+		System.out.println("IP:"+insocket.getAddress().getHostAddress());
+		
 		String key = "user_" + params.getString("token");
 		// 获取缓存
 		Map<Object, Object> userMap = redisTemplate.opsForHash().entries(key);
 		String user_name = userMap.get("user_name").toString();
 		String user_pwd = userMap.get("user_pwd").toString();
-		if (!Coder.encryptMD5(params.getString("old_pwd")).equals(user_pwd))
+		if (!params.getString("old_pwd").equals(user_pwd))
 			return new Result(CustomErrors.USER_PWD_ERR);
 		
 		String new_pwd = params.getString("new_pwd");
@@ -116,7 +143,7 @@ public class UserPump extends DataPump<JSONObject> {
 			return new Result(CustomErrors.USER_CHANGE_PWD_ERR);
 		
 		LotteryUser user = userServer.getUser(user_name, user_pwd);
-		user.setUserPwd(Coder.encryptMD5(new_pwd));
+		user.setUserPwd(new_pwd);
 		
 		int result = userServer.updateUser(user);
 		if (result == 1) {

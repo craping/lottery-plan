@@ -16,19 +16,19 @@ public class LotteryBetting {
 
     private String betType;
 
-    private String betPeriod;
+    private String period;
 
-    private String betSchema;
+    private String schema;
 
-    private Integer betPosition;
+    private Integer position;
 
-    private Date betTime;
+    private Date time;
 
-    private BigDecimal betAmount;
+    private BigDecimal amount;
 
-    private BigDecimal betRate;
+    private BigDecimal rate;
 
-    private BigDecimal bonusAmount;
+    private BigDecimal bonus;
 
     private Integer win;
 
@@ -80,60 +80,60 @@ public class LotteryBetting {
         this.betType = betType == null ? null : betType.trim();
     }
 
-    public String getBetPeriod() {
-        return betPeriod;
+    public String getPeriod() {
+        return period;
     }
 
-    public void setBetPeriod(String betPeriod) {
-        this.betPeriod = betPeriod == null ? null : betPeriod.trim();
+    public void setPeriod(String period) {
+        this.period = period == null ? null : period.trim();
     }
 
-    public String getBetSchema() {
-        return betSchema;
+    public String getSchema() {
+        return schema;
     }
 
-    public void setBetSchema(String betSchema) {
-        this.betSchema = betSchema == null ? null : betSchema.trim();
+    public void setSchema(String schema) {
+        this.schema = schema == null ? null : schema.trim();
     }
 
-    public Integer getBetPosition() {
-        return betPosition;
+    public Integer getPosition() {
+        return position;
     }
 
-    public void setBetPosition(Integer betPosition) {
-        this.betPosition = betPosition;
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 
-    public Date getBetTime() {
-        return betTime;
+    public Date getTime() {
+        return time;
     }
 
-    public void setBetTime(Date betTime) {
-        this.betTime = betTime;
+    public void setTime(Date time) {
+        this.time = time;
     }
 
-    public BigDecimal getBetAmount() {
-        return betAmount;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
-    public void setBetAmount(BigDecimal betAmount) {
-        this.betAmount = betAmount;
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
-    public BigDecimal getBetRate() {
-        return betRate;
+    public BigDecimal getRate() {
+        return rate;
     }
 
-    public void setBetRate(BigDecimal betRate) {
-        this.betRate = betRate;
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
     }
 
-    public BigDecimal getBonusAmount() {
-        return bonusAmount;
+    public BigDecimal getBonus() {
+        return bonus;
     }
 
-    public void setBonusAmount(BigDecimal bonusAmount) {
-        this.bonusAmount = bonusAmount;
+    public void setBonus(BigDecimal bonus) {
+        this.bonus = bonus;
     }
 
     public Integer getWin() {
