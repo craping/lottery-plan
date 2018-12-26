@@ -1,7 +1,5 @@
 package plan.lottery.biz.server.impl;
 
-import java.util.Date;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.crap.data.dao.sql.util.support.ServiceDao;

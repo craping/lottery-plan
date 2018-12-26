@@ -3,8 +3,6 @@ package plan.server.pump;
 import java.io.IOException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +66,6 @@ public class ApiPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	}
 	
 	public static void main (String args[]) throws IOException {
-
 		List<String> players =  new ArrayList<>();
 		players.add("1");
 		players.add("2");

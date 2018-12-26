@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.FullHttpRequest;
 import net.sf.json.JSONObject;
-import plan.lottery.biz.server.BettingServer;
 import plan.lottery.common.param.TokenParam;
 import plan.lottery.utils.Tools;
 
@@ -32,9 +31,6 @@ public class BetPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	
 	@Autowired
 	private StringRedisTemplate redisTemplate;
-	
-	@Autowired
-	private BettingServer bettingServer;
 	
 	@Pipe("betting")
 	@BarScreen(

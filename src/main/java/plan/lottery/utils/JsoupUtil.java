@@ -3,16 +3,13 @@ package plan.lottery.utils;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.crap.jrain.core.util.DateUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import net.sf.json.JSONObject;
 import plan.lottery.biz.vo.BJSCResutVO;
 import plan.lottery.common.BJSCPlayType;
 
@@ -67,8 +64,8 @@ public class JsoupUtil {
 		System.out.println(a.equals(BJSCPlayType.GYH.getSimpleName()));
 		System.out.println(a == BJSCPlayType.GYH.getSimpleName());
 		
-		String keys = Tools.split(tz).keySet().toString();
-		System.out.println(StringUtils.join(result, ","));
+		/*String keys = Tools.split(tz).keySet().toString();
+		System.out.println(StringUtils.join(result, ","));*/
 		
 	}
 }
