@@ -2,7 +2,6 @@ package plan.server.pump;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +25,7 @@ import io.netty.channel.Channel;
 import io.netty.handler.codec.http.FullHttpRequest;
 import net.sf.json.JSONObject;
 import plan.lottery.common.CustomErrors;
+import plan.lottery.common.param.TokenParam;
 import plan.lottery.utils.Arith;
 import plan.lottery.utils.Tools;
 
@@ -42,7 +42,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	@BarScreen(
 		desc="查看具体方案历史记录",
 		params= {
-			//@Parameter(type=TokenParam.class),
+			@Parameter(type=TokenParam.class),
 			@Parameter(value="name",  desc="计划名称"),
 			@Parameter(value="bet_type",  desc="计划玩法 DWD DX DS"),
 			@Parameter(value="position",  desc="方案位置", required=false),
@@ -51,7 +51,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		}
 	)
 	public Errcode getHistory (JSONObject params) {
-		List<String> result = new ArrayList<>(); // 查询结果
+		List<JSONObject> result = new ArrayList<>(); // 查询结果
 		
 		Map<Object, Object> history_plan = redisTemplate.opsForHash().entries("plan_history");
 		if (history_plan == null || history_plan.isEmpty())
@@ -69,19 +69,17 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 				break;
 			
 			if (key.toString().contains(current_plan_key)) {
-				JSONObject history_json = JSONObject.fromObject(history_plan.get(key));
-				result.add(history_json.toString().replace("\"", "'"));
+				result.add(JSONObject.fromObject(history_plan.get(key)));
 			}
 		}
 		return new DataResult(Errors.OK, new Data(result));
 	}
 	
-	
 	@Pipe("search")
 	@BarScreen(
 		desc="筛选计划",
 		params= {
-			//@Parameter(type=TokenParam.class),
+			@Parameter(type=TokenParam.class),
 			@Parameter(value="bet_type",  desc="计划玩法 DWD DX DS"),
 			@Parameter(value="position",  desc="方案位置", required=false),
 			@Parameter(value="bet_count",  desc="计划投注期数2,3期计划"),
@@ -101,7 +99,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		}
 		current_plan_key = current_plan_key + params.getString("bet_count") + "_";
 		
-		List<String> result = new ArrayList<>(); // 匹配结果集
+		List<JSONObject> result = new ArrayList<>(); // 匹配结果集
 		for (Object key : current_plan.keySet()) {
 			if (result.size() >= params.getInt("count"))
 				break;
@@ -142,18 +140,16 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 					Collections.sort(win_idx_list);
 					current_json.put("win_num", win_idx_list.get(win_idx_list.size()-1));
 				}
-				result.add(current_json.toString().replace("\"", "'"));
+				result.add(current_json);
 			}
 		}
 		return new DataResult(Errors.OK, new Data(result));
 	}
 	
-	
 	@Pipe("save")
 	@BarScreen(
 		desc="保存计划",
 		params= {
-			//@Parameter(type=TokenParam.class),
 			@Parameter(value="name",  desc="计划名称"),
 			@Parameter(value="bet_type",  desc="计划玩法 DWD DX DS"),
 			@Parameter(value="bet_count",  desc="计划投注期数2,3期计划"),
@@ -166,8 +162,9 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		}
 	)
 	public Errcode save (JSONObject params) {
+		// TODO: 加入ip限制 绑定
 		String name = params.getString("name");
-		Map<String, String> plan_info = new HashMap<>();
+		JSONObject plan_info = new JSONObject();
 		plan_info.put("name", name);
 		plan_info.put("bet_type", params.getString("bet_type"));
 		plan_info.put("bet_count", params.getString("bet_count"));
@@ -200,7 +197,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		}
 		
 		// 更新覆盖当前计划
-		redisTemplate.opsForHash().put(current_key, current_plan_key, JSONObject.fromObject(plan_info).toString());
+		redisTemplate.opsForHash().put(current_key, current_plan_key, plan_info.toString());
 		return new DataResult(Errors.OK);
 	}
 }

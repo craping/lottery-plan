@@ -69,17 +69,11 @@ public class ApiPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	
 	public static void main (String args[]) throws IOException {
 
-		String s = "DWD_1_2_f36a3686e50b41f1f9cbaa058ba50e89";
-		System.out.println(s.indexOf("DWD_1_2_") > -1);
-		System.out.println(s.indexOf("DWD_2_2_") > -1);
-		List<Integer> list = new ArrayList<>();
-		list.add(9);
-		list.add(5);
-		list.add(6);
-		list.add(1);
-		System.out.println(list.toString());
-		Collections.sort(list);
-		System.out.println(list.toString());
-		System.out.println(list.get(list.size()-1));
+		List<String> players =  new ArrayList<>();
+		players.add("1");
+		players.add("2");
+		players.add("3");
+		players.forEach((player) -> System.out.println(player + "; "));
+		players.forEach(System.out::print);
 	}
 }
