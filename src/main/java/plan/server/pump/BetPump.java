@@ -47,21 +47,24 @@ public class BetPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		}
 	)
 	public Errcode betting (JSONObject params) {
-		// redis key : user_betting_720956
+		// 缓存获取用户信息
+		String user_key = "user_" + params.getString("token");
+		Map<Object, Object> userMap = redisTemplate.opsForHash().entries(user_key);
 		String key = "betting_" + params.getString("period"); 
-		Map<String, String> info = new HashMap<>();
+		JSONObject info = new JSONObject();
+		info.put("uid", userMap.get("uid"));
+		info.put("user_name", userMap.get("user_name"));
 		info.put("lottery_type", params.getString("lottery_type"));
 		info.put("bet_type", params.getString("bet_type"));
 		info.put("period", params.getString("period"));
 		info.put("schema", params.getString("schema"));
 		info.put("position", params.getString("position"));
 		info.put("amount", params.getString("amount"));
-		info.put("time", Tools.getSysDate());
+		info.put("time", Tools.getSysTime());
 		info.put("rate", params.getString("rate"));
 		info.put("token", params.getString("token"));
-		
 		try {
-			redisTemplate.opsForList().leftPush(key, JSONObject.fromObject(info).toString());
+			redisTemplate.opsForList().leftPush(key, info.toString());
 			return new DataResult(Errors.OK);
 		} catch (Exception ex) {
 			log.error("bet/betting 操作异常:", ex);

@@ -39,7 +39,7 @@ public class UserSettingServerImpl implements UserSettingServer {
 
 	@Override
 	public List<LotteryUserSetting> getSettings(Integer uid) {
-		return serviceDao.queryEntityList("SELECT * FROM lottery_user_setting", LotteryUserSetting.class);
+		return serviceDao.queryEntityList("SELECT * FROM lottery_user_setting WHERE uid=" + uid, LotteryUserSetting.class);
 	}
 
 	@Override

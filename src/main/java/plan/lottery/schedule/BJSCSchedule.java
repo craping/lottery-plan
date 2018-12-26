@@ -44,7 +44,7 @@ public class BJSCSchedule {
 		String key = "betting_" + resultVo.getPeriod();
 		
 		// 获取用户投注记录
-		List<String> l = redisTemplate.opsForList().range("betting_721336", 0, -1);
+		List<String> l = redisTemplate.opsForList().range("betting_722410", 0, -1);
 		log.info("########## 投注记录：" + l.size());
 		
 		if (l.size() > 0) {
@@ -52,12 +52,6 @@ public class BJSCSchedule {
 			for (String s : l) {
 				System.out.println(s);
 				JSONObject record = JSONObject.fromObject(s);
-			
-				// 缓存获取用户信息
-				String user_key = "user_" + record.getString("token");
-				Map<Object, Object> userMap = redisTemplate.opsForHash().entries(user_key);
-				Integer uid = Integer.parseInt(userMap.get("uid").toString());
-				String user_name = userMap.get("user_name").toString();
 				String bet_type = record.getString("bet_type"); // 投注类型
 				String schema = record.getString("schema"); 	// 投注方案
 				String amount = record.getString("amount");		// 投注金额
@@ -78,17 +72,17 @@ public class BJSCSchedule {
 				}
 				
 				LotteryBetting betting = new LotteryBetting();
-				betting.setUid(uid);
-				betting.setUserName(user_name);
+				betting.setUid(record.getInt("uid"));
+				betting.setUserName(record.getString("user_name"));
 				betting.setLotteryType(record.getString("lottery_type"));
 				betting.setLotteryResult(lottery_reslut);
 				betting.setBetType(bet_type);
-				betting.setPeriod(record.getString("period"));
-				betting.setSchema(schema);
-				betting.setPosition(position);
-				betting.setTime(DateUtil.parseDate(record.getString("time"), "yyyyMMddHHmmss"));
-				betting.setAmount(new BigDecimal(amount));
-				betting.setRate(new BigDecimal(record.getString("rate")));
+				betting.setBetPeriod(record.getString("period"));
+				betting.setBetSchema(schema);
+				betting.setBetPosition(position);
+				betting.setBetTime(DateUtil.parseDate(record.getString("time"), "yyyyMMddHHmmss"));
+				betting.setBetAmount(new BigDecimal(amount));
+				betting.setBetRate(new BigDecimal(record.getString("rate")));
 				betting.setBonus(bonus);
 				betting.setWin(isWin);
 				bettingList.add(betting);
@@ -96,7 +90,7 @@ public class BJSCSchedule {
 			
 			// 当前期投注记录持久化 并删除投注缓存记录
 			if (bettingServer.batchInsert(bettingList) == 1) {
-				redisTemplate.delete("user_betting_721336"); 
+				redisTemplate.delete(key);
 			}
 		}
 		log.info("########## 北京赛车开奖任务结束 ##########");
