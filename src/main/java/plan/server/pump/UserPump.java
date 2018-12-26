@@ -26,9 +26,11 @@ import io.netty.channel.Channel;
 import io.netty.handler.codec.http.FullHttpRequest;
 import net.sf.json.JSONObject;
 import plan.data.sql.entity.LotteryUser;
+import plan.data.sql.entity.LotteryUserSetting;
 import plan.lottery.biz.server.UserServer;
 import plan.lottery.common.CustomErrors;
 import plan.lottery.common.param.TokenParam;
+import plan.lottery.utils.ClassUtil;
 
 @Pump("user")
 @Component
@@ -152,5 +154,33 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 			return new Result(CustomErrors.USER_OPR_ERR);
 		}
 		return new DataResult(Errors.OK);
+	}
+	
+	@Pipe("saveSetting")
+	@BarScreen(
+		desc="保存用户配置",
+		params= {
+			//@Parameter(type=TokenParam.class),
+			@Parameter(value="name",  desc="用户配置名称"),
+			@Parameter(value="lottery_type",  desc="彩票类型"),
+			@Parameter(value="start_money",  desc="初始金额"),
+			@Parameter(value="chase_max_num",  desc="最大追号"),
+			@Parameter(value="chase_mode",  desc="追号方式"),
+			@Parameter(value="bet_mode",  desc="投注模式"),
+			@Parameter(value="rate",  desc="平台赔率"),
+			@Parameter(value="min_multiple",  desc="最小倍数"),
+			@Parameter(value="max_multiple",  desc="最大倍数"),
+			@Parameter(value="stop_lose",  desc="止损金额"),
+			@Parameter(value="stop_win",  desc="止盈金额"),
+			@Parameter(value="plan_name",  desc="方案名称"),
+			@Parameter(value="bet_type",  desc="计划玩法"),
+			@Parameter(value="position",  desc="计划位置"),
+			@Parameter(value="bet_count",  desc="方案期数"),
+		}
+	)
+	public Errcode saveSetting (JSONObject params) {
+		LotteryUserSetting setting = new LotteryUserSetting();
+		setting = ClassUtil.fillObject((Map)params, setting);
+		return new DataResult(Errors.OK, new Data(setting)); 
 	}
 }

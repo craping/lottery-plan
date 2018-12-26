@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="plan.data.sql.mapper.LotteryUserSettingMapper">
+  <resultMap id="BaseResultMap" type="plan.data.sql.entity.LotteryUserSetting">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="lottery_type" jdbcType="VARCHAR" property="lotteryType" />
+    <result column="start_money" jdbcType="DECIMAL" property="startMoney" />
+    <result column="chase_max_num" jdbcType="INTEGER" property="chaseMaxNum" />
+    <result column="chase_mode" jdbcType="VARCHAR" property="chaseMode" />
+    <result column="bet_mode" jdbcType="VARCHAR" property="betMode" />
+    <result column="rate" jdbcType="VARCHAR" property="rate" />
+    <result column="min_multiple" jdbcType="INTEGER" property="minMultiple" />
+    <result column="max_multiple" jdbcType="INTEGER" property="maxMultiple" />
+    <result column="stop_lose" jdbcType="DECIMAL" property="stopLose" />
+    <result column="stop_win" jdbcType="DECIMAL" property="stopWin" />
+    <result column="plan_name" jdbcType="VARCHAR" property="planName" />
+    <result column="bet_type" jdbcType="VARCHAR" property="betType" />
+    <result column="position" jdbcType="INTEGER" property="position" />
+    <result column="bet_count" jdbcType="INTEGER" property="betCount" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, uid, name, lottery_type, start_money, chase_max_num, chase_mode, bet_mode, rate, 
+    min_multiple, max_multiple, stop_lose, stop_win, plan_name, bet_type, position, bet_count
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from lottery_user_setting
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from lottery_user_setting
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="plan.data.sql.entity.LotteryUserSetting">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into lottery_user_setting (uid, name, lottery_type, 
+      start_money, chase_max_num, chase_mode, 
+      bet_mode, rate, min_multiple, 
+      max_multiple, stop_lose, stop_win, 
+      plan_name, bet_type, position, 
+      bet_count)
+    values (#{uid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{lotteryType,jdbcType=VARCHAR}, 
+      #{startMoney,jdbcType=DECIMAL}, #{chaseMaxNum,jdbcType=INTEGER}, #{chaseMode,jdbcType=VARCHAR}, 
+      #{betMode,jdbcType=VARCHAR}, #{rate,jdbcType=VARCHAR}, #{minMultiple,jdbcType=INTEGER}, 
+      #{maxMultiple,jdbcType=INTEGER}, #{stopLose,jdbcType=DECIMAL}, #{stopWin,jdbcType=DECIMAL}, 
+      #{planName,jdbcType=VARCHAR}, #{betType,jdbcType=VARCHAR}, #{position,jdbcType=INTEGER}, 
+      #{betCount,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="plan.data.sql.entity.LotteryUserSetting">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into lottery_user_setting
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="uid != null">
+        uid,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="lotteryType != null">
+        lottery_type,
+      </if>
+      <if test="startMoney != null">
+        start_money,
+      </if>
+      <if test="chaseMaxNum != null">
+        chase_max_num,
+      </if>
+      <if test="chaseMode != null">
+        chase_mode,
+      </if>
+      <if test="betMode != null">
+        bet_mode,
+      </if>
+      <if test="rate != null">
+        rate,
+      </if>
+      <if test="minMultiple != null">
+        min_multiple,
+      </if>
+      <if test="maxMultiple != null">
+        max_multiple,
+      </if>
+      <if test="stopLose != null">
+        stop_lose,
+      </if>
+      <if test="stopWin != null">
+        stop_win,
+      </if>
+      <if test="planName != null">
+        plan_name,
+      </if>
+      <if test="betType != null">
+        bet_type,
+      </if>
+      <if test="position != null">
+        position,
+      </if>
+      <if test="betCount != null">
+        bet_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="uid != null">
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="lotteryType != null">
+        #{lotteryType,jdbcType=VARCHAR},
+      </if>
+      <if test="startMoney != null">
+        #{startMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="chaseMaxNum != null">
+        #{chaseMaxNum,jdbcType=INTEGER},
+      </if>
+      <if test="chaseMode != null">
+        #{chaseMode,jdbcType=VARCHAR},
+      </if>
+      <if test="betMode != null">
+        #{betMode,jdbcType=VARCHAR},
+      </if>
+      <if test="rate != null">
+        #{rate,jdbcType=VARCHAR},
+      </if>
+      <if test="minMultiple != null">
+        #{minMultiple,jdbcType=INTEGER},
+      </if>
+      <if test="maxMultiple != null">
+        #{maxMultiple,jdbcType=INTEGER},
+      </if>
+      <if test="stopLose != null">
+        #{stopLose,jdbcType=DECIMAL},
+      </if>
+      <if test="stopWin != null">
+        #{stopWin,jdbcType=DECIMAL},
+      </if>
+      <if test="planName != null">
+        #{planName,jdbcType=VARCHAR},
+      </if>
+      <if test="betType != null">
+        #{betType,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        #{position,jdbcType=INTEGER},
+      </if>
+      <if test="betCount != null">
+        #{betCount,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="plan.data.sql.entity.LotteryUserSetting">
+    update lottery_user_setting
+    <set>
+      <if test="uid != null">
+        uid = #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="lotteryType != null">
+        lottery_type = #{lotteryType,jdbcType=VARCHAR},
+      </if>
+      <if test="startMoney != null">
+        start_money = #{startMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="chaseMaxNum != null">
+        chase_max_num = #{chaseMaxNum,jdbcType=INTEGER},
+      </if>
+      <if test="chaseMode != null">
+        chase_mode = #{chaseMode,jdbcType=VARCHAR},
+      </if>
+      <if test="betMode != null">
+        bet_mode = #{betMode,jdbcType=VARCHAR},
+      </if>
+      <if test="rate != null">
+        rate = #{rate,jdbcType=VARCHAR},
+      </if>
+      <if test="minMultiple != null">
+        min_multiple = #{minMultiple,jdbcType=INTEGER},
+      </if>
+      <if test="maxMultiple != null">
+        max_multiple = #{maxMultiple,jdbcType=INTEGER},
+      </if>
+      <if test="stopLose != null">
+        stop_lose = #{stopLose,jdbcType=DECIMAL},
+      </if>
+      <if test="stopWin != null">
+        stop_win = #{stopWin,jdbcType=DECIMAL},
+      </if>
+      <if test="planName != null">
+        plan_name = #{planName,jdbcType=VARCHAR},
+      </if>
+      <if test="betType != null">
+        bet_type = #{betType,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        position = #{position,jdbcType=INTEGER},
+      </if>
+      <if test="betCount != null">
+        bet_count = #{betCount,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="plan.data.sql.entity.LotteryUserSetting">
+    update lottery_user_setting
+    set uid = #{uid,jdbcType=INTEGER},
+      name = #{name,jdbcType=VARCHAR},
+      lottery_type = #{lotteryType,jdbcType=VARCHAR},
+      start_money = #{startMoney,jdbcType=DECIMAL},
+      chase_max_num = #{chaseMaxNum,jdbcType=INTEGER},
+      chase_mode = #{chaseMode,jdbcType=VARCHAR},
+      bet_mode = #{betMode,jdbcType=VARCHAR},
+      rate = #{rate,jdbcType=VARCHAR},
+      min_multiple = #{minMultiple,jdbcType=INTEGER},
+      max_multiple = #{maxMultiple,jdbcType=INTEGER},
+      stop_lose = #{stopLose,jdbcType=DECIMAL},
+      stop_win = #{stopWin,jdbcType=DECIMAL},
+      plan_name = #{planName,jdbcType=VARCHAR},
+      bet_type = #{betType,jdbcType=VARCHAR},
+      position = #{position,jdbcType=INTEGER},
+      bet_count = #{betCount,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

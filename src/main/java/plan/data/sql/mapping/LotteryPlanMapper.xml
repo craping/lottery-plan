@@ -5,14 +5,14 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="bet_type" jdbcType="VARCHAR" property="betType" />
-    <result column="bet_count" jdbcType="VARCHAR" property="betCount" />
+    <result column="bet_count" jdbcType="INTEGER" property="betCount" />
     <result column="period" jdbcType="VARCHAR" property="period" />
     <result column="position" jdbcType="INTEGER" property="position" />
     <result column="schema" jdbcType="VARCHAR" property="schema" />
     <result column="time" jdbcType="TIMESTAMP" property="time" />
     <result column="result" jdbcType="VARCHAR" property="result" />
     <result column="win_period" jdbcType="VARCHAR" property="winPeriod" />
-    <result column="win" jdbcType="VARCHAR" property="win" />
+    <result column="win" jdbcType="INTEGER" property="win" />
   </resultMap>
   <sql id="Base_Column_List">
     id, name, bet_type, bet_count, period, position, schema, time, result, win_period, 
@@ -36,10 +36,10 @@
       period, position, schema, 
       time, result, win_period, 
       win)
-    values (#{name,jdbcType=VARCHAR}, #{betType,jdbcType=VARCHAR}, #{betCount,jdbcType=VARCHAR}, 
+    values (#{name,jdbcType=VARCHAR}, #{betType,jdbcType=VARCHAR}, #{betCount,jdbcType=INTEGER}, 
       #{period,jdbcType=VARCHAR}, #{position,jdbcType=INTEGER}, #{schema,jdbcType=VARCHAR}, 
       #{time,jdbcType=TIMESTAMP}, #{result,jdbcType=VARCHAR}, #{winPeriod,jdbcType=VARCHAR}, 
-      #{win,jdbcType=VARCHAR})
+      #{win,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="plan.data.sql.entity.LotteryPlan">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -86,7 +86,7 @@
         #{betType,jdbcType=VARCHAR},
       </if>
       <if test="betCount != null">
-        #{betCount,jdbcType=VARCHAR},
+        #{betCount,jdbcType=INTEGER},
       </if>
       <if test="period != null">
         #{period,jdbcType=VARCHAR},
@@ -107,7 +107,7 @@
         #{winPeriod,jdbcType=VARCHAR},
       </if>
       <if test="win != null">
-        #{win,jdbcType=VARCHAR},
+        #{win,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -121,7 +121,7 @@
         bet_type = #{betType,jdbcType=VARCHAR},
       </if>
       <if test="betCount != null">
-        bet_count = #{betCount,jdbcType=VARCHAR},
+        bet_count = #{betCount,jdbcType=INTEGER},
       </if>
       <if test="period != null">
         period = #{period,jdbcType=VARCHAR},
@@ -142,7 +142,7 @@
         win_period = #{winPeriod,jdbcType=VARCHAR},
       </if>
       <if test="win != null">
-        win = #{win,jdbcType=VARCHAR},
+        win = #{win,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -151,14 +151,14 @@
     update lottery_plan
     set name = #{name,jdbcType=VARCHAR},
       bet_type = #{betType,jdbcType=VARCHAR},
-      bet_count = #{betCount,jdbcType=VARCHAR},
+      bet_count = #{betCount,jdbcType=INTEGER},
       period = #{period,jdbcType=VARCHAR},
       position = #{position,jdbcType=INTEGER},
       schema = #{schema,jdbcType=VARCHAR},
       time = #{time,jdbcType=TIMESTAMP},
       result = #{result,jdbcType=VARCHAR},
       win_period = #{winPeriod,jdbcType=VARCHAR},
-      win = #{win,jdbcType=VARCHAR}
+      win = #{win,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -9,7 +9,7 @@ public class LotteryPlan {
 
     private String betType;
 
-    private String betCount;
+    private Integer betCount;
 
     private String period;
 
@@ -23,7 +23,7 @@ public class LotteryPlan {
 
     private String winPeriod;
 
-    private String win;
+    private Integer win;
 
     public Integer getId() {
         return id;
@@ -49,12 +49,12 @@ public class LotteryPlan {
         this.betType = betType == null ? null : betType.trim();
     }
 
-    public String getBetCount() {
+    public Integer getBetCount() {
         return betCount;
     }
 
-    public void setBetCount(String betCount) {
-        this.betCount = betCount == null ? null : betCount.trim();
+    public void setBetCount(Integer betCount) {
+        this.betCount = betCount;
     }
 
     public String getPeriod() {
@@ -105,11 +105,11 @@ public class LotteryPlan {
         this.winPeriod = winPeriod == null ? null : winPeriod.trim();
     }
 
-    public String getWin() {
+    public Integer getWin() {
         return win;
     }
 
-    public void setWin(String win) {
-        this.win = win == null ? null : win.trim();
+    public void setWin(Integer win) {
+        this.win = win;
     }
 }
