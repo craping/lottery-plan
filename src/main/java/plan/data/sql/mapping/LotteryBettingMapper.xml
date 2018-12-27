@@ -8,18 +8,18 @@
     <result column="lottery_type" jdbcType="VARCHAR" property="lotteryType" />
     <result column="lottery_result" jdbcType="VARCHAR" property="lotteryResult" />
     <result column="bet_type" jdbcType="VARCHAR" property="betType" />
-    <result column="bet_time" jdbcType="TIMESTAMP" property="betTime" />
-    <result column="bet_period" jdbcType="VARCHAR" property="betPeriod" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="period" jdbcType="VARCHAR" property="period" />
     <result column="bet_schema" jdbcType="VARCHAR" property="betSchema" />
-    <result column="bet_position" jdbcType="INTEGER" property="betPosition" />
-    <result column="bet_amount" jdbcType="DECIMAL" property="betAmount" />
-    <result column="bet_rate" jdbcType="DECIMAL" property="betRate" />
+    <result column="position" jdbcType="INTEGER" property="position" />
+    <result column="amount" jdbcType="DECIMAL" property="amount" />
+    <result column="rate" jdbcType="DECIMAL" property="rate" />
     <result column="bonus" jdbcType="DECIMAL" property="bonus" />
     <result column="win" jdbcType="INTEGER" property="win" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, uid, user_name, lottery_type, lottery_result, bet_type, bet_time, bet_period, 
-    bet_schema, bet_position, bet_amount, bet_rate, bonus, win
+    id, uid, user_name, lottery_type, lottery_result, bet_type, create_time, period, 
+    bet_schema, position, amount, rate, bonus, win
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -36,14 +36,14 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into lottery_betting (uid, user_name, lottery_type, 
-      lottery_result, bet_type, bet_time, 
-      bet_period, bet_schema, bet_position, 
-      bet_amount, bet_rate, bonus, 
+      lottery_result, bet_type, create_time, 
+      period, bet_schema, position, 
+      amount, rate, bonus, 
       win)
     values (#{uid,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{lotteryType,jdbcType=VARCHAR}, 
-      #{lotteryResult,jdbcType=VARCHAR}, #{betType,jdbcType=VARCHAR}, #{betTime,jdbcType=TIMESTAMP}, 
-      #{betPeriod,jdbcType=VARCHAR}, #{betSchema,jdbcType=VARCHAR}, #{betPosition,jdbcType=INTEGER}, 
-      #{betAmount,jdbcType=DECIMAL}, #{betRate,jdbcType=DECIMAL}, #{bonus,jdbcType=DECIMAL}, 
+      #{lotteryResult,jdbcType=VARCHAR}, #{betType,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{period,jdbcType=VARCHAR}, #{betSchema,jdbcType=VARCHAR}, #{position,jdbcType=INTEGER}, 
+      #{amount,jdbcType=DECIMAL}, #{rate,jdbcType=DECIMAL}, #{bonus,jdbcType=DECIMAL}, 
       #{win,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="plan.data.sql.entity.LotteryBetting">
@@ -67,23 +67,23 @@
       <if test="betType != null">
         bet_type,
       </if>
-      <if test="betTime != null">
-        bet_time,
+      <if test="createTime != null">
+        create_time,
       </if>
-      <if test="betPeriod != null">
-        bet_period,
+      <if test="period != null">
+        period,
       </if>
       <if test="betSchema != null">
         bet_schema,
       </if>
-      <if test="betPosition != null">
-        bet_position,
+      <if test="position != null">
+        position,
       </if>
-      <if test="betAmount != null">
-        bet_amount,
+      <if test="amount != null">
+        amount,
       </if>
-      <if test="betRate != null">
-        bet_rate,
+      <if test="rate != null">
+        rate,
       </if>
       <if test="bonus != null">
         bonus,
@@ -108,23 +108,23 @@
       <if test="betType != null">
         #{betType,jdbcType=VARCHAR},
       </if>
-      <if test="betTime != null">
-        #{betTime,jdbcType=TIMESTAMP},
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="betPeriod != null">
-        #{betPeriod,jdbcType=VARCHAR},
+      <if test="period != null">
+        #{period,jdbcType=VARCHAR},
       </if>
       <if test="betSchema != null">
         #{betSchema,jdbcType=VARCHAR},
       </if>
-      <if test="betPosition != null">
-        #{betPosition,jdbcType=INTEGER},
+      <if test="position != null">
+        #{position,jdbcType=INTEGER},
       </if>
-      <if test="betAmount != null">
-        #{betAmount,jdbcType=DECIMAL},
+      <if test="amount != null">
+        #{amount,jdbcType=DECIMAL},
       </if>
-      <if test="betRate != null">
-        #{betRate,jdbcType=DECIMAL},
+      <if test="rate != null">
+        #{rate,jdbcType=DECIMAL},
       </if>
       <if test="bonus != null">
         #{bonus,jdbcType=DECIMAL},
@@ -152,23 +152,23 @@
       <if test="betType != null">
         bet_type = #{betType,jdbcType=VARCHAR},
       </if>
-      <if test="betTime != null">
-        bet_time = #{betTime,jdbcType=TIMESTAMP},
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="betPeriod != null">
-        bet_period = #{betPeriod,jdbcType=VARCHAR},
+      <if test="period != null">
+        period = #{period,jdbcType=VARCHAR},
       </if>
       <if test="betSchema != null">
         bet_schema = #{betSchema,jdbcType=VARCHAR},
       </if>
-      <if test="betPosition != null">
-        bet_position = #{betPosition,jdbcType=INTEGER},
+      <if test="position != null">
+        position = #{position,jdbcType=INTEGER},
       </if>
-      <if test="betAmount != null">
-        bet_amount = #{betAmount,jdbcType=DECIMAL},
+      <if test="amount != null">
+        amount = #{amount,jdbcType=DECIMAL},
       </if>
-      <if test="betRate != null">
-        bet_rate = #{betRate,jdbcType=DECIMAL},
+      <if test="rate != null">
+        rate = #{rate,jdbcType=DECIMAL},
       </if>
       <if test="bonus != null">
         bonus = #{bonus,jdbcType=DECIMAL},
@@ -186,12 +186,12 @@
       lottery_type = #{lotteryType,jdbcType=VARCHAR},
       lottery_result = #{lotteryResult,jdbcType=VARCHAR},
       bet_type = #{betType,jdbcType=VARCHAR},
-      bet_time = #{betTime,jdbcType=TIMESTAMP},
-      bet_period = #{betPeriod,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      period = #{period,jdbcType=VARCHAR},
       bet_schema = #{betSchema,jdbcType=VARCHAR},
-      bet_position = #{betPosition,jdbcType=INTEGER},
-      bet_amount = #{betAmount,jdbcType=DECIMAL},
-      bet_rate = #{betRate,jdbcType=DECIMAL},
+      position = #{position,jdbcType=INTEGER},
+      amount = #{amount,jdbcType=DECIMAL},
+      rate = #{rate,jdbcType=DECIMAL},
       bonus = #{bonus,jdbcType=DECIMAL},
       win = #{win,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}

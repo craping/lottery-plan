@@ -56,11 +56,11 @@ public class BetPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		info.put("user_name", userMap.get("user_name"));
 		info.put("lottery_type", params.getString("lottery_type"));
 		info.put("bet_type", params.getString("bet_type"));
+		info.put("create_time", Tools.getSysTimeFormat("yyyy-MM-dd HH:mm:ss"));
 		info.put("period", params.getString("period"));
-		info.put("schema", params.getString("schema"));
+		info.put("bet_schema", params.getString("schema"));
 		info.put("position", params.getString("position"));
 		info.put("amount", params.getString("amount"));
-		info.put("time", Tools.getSysTime());
 		info.put("rate", params.getString("rate"));
 		info.put("token", params.getString("token"));
 		try {

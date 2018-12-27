@@ -44,33 +44,30 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		params= {
 			@Parameter(type=TokenParam.class),
 			@Parameter(value="name",  desc="计划名称"),
-			@Parameter(value="bet_type",  desc="计划玩法 DWD DX DS"),
+			@Parameter(value="type",  desc="计划玩法 DWD DX DS"),
 			@Parameter(value="position",  desc="方案位置", required=false),
-			@Parameter(value="bet_count",  desc="计划投注期数2,3期计划"),
+			@Parameter(value="plan_count",  desc="计划投注期数2,3期计划"),
 			@Parameter(value="count",  desc="查询数量")
 		}
 	)
 	public Errcode getHistory (JSONObject params) {
 		List<JSONObject> result = new ArrayList<>(); // 查询结果
-		
 		Map<Object, Object> history_plan = redisTemplate.opsForHash().entries("plan_history");
 		if (history_plan == null || history_plan.isEmpty())
 			return new DataResult(Errors.OK, new Data(result));
 		
 		// 模糊搜索条件key 拼接
-		String current_plan_key = params.getString("bet_type") + "_"; 
-		if (!Tools.isStrEmpty(params.optString("position"))) {
+		String current_plan_key = params.getString("type") + "_"; 
+		if (!Tools.isStrEmpty(params.optString("position")))
 			current_plan_key += (params.getString("position") + "_");
-		}
-		current_plan_key = current_plan_key + params.getString("bet_count") + "_" + Coder.encryptMD5(params.getString("name"));
+		current_plan_key = current_plan_key + params.getString("plan_count") + "_" + Coder.encryptMD5(params.getString("name"));
 		
 		for (Object key : history_plan.keySet()) {
 			if (result.size() >= params.getInt("count")) 
 				break;
 			
-			if (key.toString().contains(current_plan_key)) {
+			if (key.toString().contains(current_plan_key)) 
 				result.add(JSONObject.fromObject(history_plan.get(key)));
-			}
 		}
 		return new DataResult(Errors.OK, new Data(result));
 	}
@@ -80,9 +77,9 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		desc="筛选计划",
 		params= {
 			@Parameter(type=TokenParam.class),
-			@Parameter(value="bet_type",  desc="计划玩法 DWD DX DS"),
+			@Parameter(value="type",  desc="计划玩法 DWD DX DS"),
 			@Parameter(value="position",  desc="方案位置", required=false),
-			@Parameter(value="bet_count",  desc="计划投注期数2,3期计划"),
+			@Parameter(value="plan_count",  desc="计划投注期数2,3期计划"),
 			@Parameter(value="count",  desc="查询数量"),
 			@Parameter(value="rate", desc="胜率计算数")
 		}
@@ -93,11 +90,10 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 			return new DataResult(CustomErrors.PLAN_OPR_ERR);
 		
 		// 模糊搜索条件key 拼接
-		String current_plan_key = params.getString("bet_type") + "_"; 
-		if (!Tools.isStrEmpty(params.optString("position"))) {
+		String current_plan_key = params.getString("type") + "_"; 
+		if (!Tools.isStrEmpty(params.optString("position")))
 			current_plan_key += (params.getString("position") + "_");
-		}
-		current_plan_key = current_plan_key + params.getString("bet_count") + "_";
+		current_plan_key = current_plan_key + params.getString("plan_count") + "_";
 		
 		List<JSONObject> result = new ArrayList<>(); // 匹配结果集
 		for (Object key : current_plan.keySet()) {
@@ -151,8 +147,8 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		desc="保存计划",
 		params= {
 			@Parameter(value="name",  desc="计划名称"),
-			@Parameter(value="bet_type",  desc="计划玩法 DWD DX DS"),
-			@Parameter(value="bet_count",  desc="计划投注期数2,3期计划"),
+			@Parameter(value="type",  desc="计划玩法 DWD DX DS"),
+			@Parameter(value="plan_count",  desc="计划投注期数2,3期计划"),
 			@Parameter(value="period",  desc="计划期号111-113"),
 			@Parameter(value="position",  desc="方案位置", required=false),
 			@Parameter(value="schema",  desc="计划号码"),
@@ -166,23 +162,22 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		String name = params.getString("name");
 		JSONObject plan_info = new JSONObject();
 		plan_info.put("name", name);
-		plan_info.put("bet_type", params.getString("bet_type"));
-		plan_info.put("bet_count", params.getString("bet_count"));
+		plan_info.put("plan_type", params.getString("type"));
+		plan_info.put("plan_count", params.getString("plan_count"));
+		plan_info.put("plan_schema", params.getString("schema"));
 		plan_info.put("period", params.getString("period"));
 		plan_info.put("position", params.optString("position", ""));
-		plan_info.put("schema", params.getString("schema"));
-		plan_info.put("time", Tools.getSysTimeFormat("yyyy-MM-dd HH:mm:ss"));
-		plan_info.put("result", "");
+		plan_info.put("create_time", Tools.getSysTimeFormat("yyyy-MM-dd HH:mm:ss"));
+		plan_info.put("win_result", "");
 		plan_info.put("win_period", "");
 		plan_info.put("win", "");
 		
-		String current_plan_key = params.getString("bet_type") + "_"; // 当前操作计划key
-		if (!Tools.isStrEmpty(params.optString("position"))) {
-			current_plan_key += (params.getString("position") + "_");
-		}
-		current_plan_key = current_plan_key + params.getString("bet_count") + "_" + Coder.encryptMD5(name);
 		String current_key = "plan_current"; // 执行中计划key
 		String history_key = "plan_history"; // 历史计划key
+		String current_plan_key = params.getString("type") + "_"; // 当前操作计划key
+		if (!Tools.isStrEmpty(params.optString("position")))
+			current_plan_key += (params.getString("position") + "_");
+		current_plan_key = current_plan_key + params.getString("plan_count") + "_" + Coder.encryptMD5(name);
 		
 		// 先处理上一期计划 更新 中奖状态 开奖结果 记录中奖期 
 		Map<Object, Object> current_plan = redisTemplate.opsForHash().entries(current_key);
@@ -191,7 +186,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 			JSONObject obj = JSONObject.fromObject(pre_plan);
 			obj.put("win", params.optString("pre_win", "0"));
 			obj.put("win_period", params.optString("pre_period", ""));
-			obj.put("result", params.optString("pre_result", ""));
+			obj.put("win_result", params.optString("pre_result", ""));
 			// 保存到计划历史记录
 			redisTemplate.opsForHash().put(history_key, current_plan_key+"_"+obj.getString("period"), obj.toString());
 		}

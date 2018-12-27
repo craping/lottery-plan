@@ -4,19 +4,19 @@
   <resultMap id="BaseResultMap" type="plan.data.sql.entity.LotteryPlan">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="bet_type" jdbcType="VARCHAR" property="betType" />
-    <result column="bet_count" jdbcType="INTEGER" property="betCount" />
+    <result column="plan_type" jdbcType="VARCHAR" property="planType" />
+    <result column="plan_count" jdbcType="INTEGER" property="planCount" />
+    <result column="plan_schema" jdbcType="VARCHAR" property="planSchema" />
     <result column="period" jdbcType="VARCHAR" property="period" />
     <result column="position" jdbcType="INTEGER" property="position" />
-    <result column="schema" jdbcType="VARCHAR" property="schema" />
-    <result column="time" jdbcType="TIMESTAMP" property="time" />
-    <result column="result" jdbcType="VARCHAR" property="result" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="win_result" jdbcType="VARCHAR" property="winResult" />
     <result column="win_period" jdbcType="VARCHAR" property="winPeriod" />
     <result column="win" jdbcType="INTEGER" property="win" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, bet_type, bet_count, period, position, schema, time, result, win_period, 
-    win
+    id, name, plan_type, plan_count, plan_schema, period, position, create_time, win_result, 
+    win_period, win
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -32,13 +32,13 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into lottery_plan (name, bet_type, bet_count, 
-      period, position, schema, 
-      time, result, win_period, 
+    insert into lottery_plan (name, plan_type, plan_count, 
+      plan_schema, period, position, 
+      create_time, win_result, win_period, 
       win)
-    values (#{name,jdbcType=VARCHAR}, #{betType,jdbcType=VARCHAR}, #{betCount,jdbcType=INTEGER}, 
-      #{period,jdbcType=VARCHAR}, #{position,jdbcType=INTEGER}, #{schema,jdbcType=VARCHAR}, 
-      #{time,jdbcType=TIMESTAMP}, #{result,jdbcType=VARCHAR}, #{winPeriod,jdbcType=VARCHAR}, 
+    values (#{name,jdbcType=VARCHAR}, #{planType,jdbcType=VARCHAR}, #{planCount,jdbcType=INTEGER}, 
+      #{planSchema,jdbcType=VARCHAR}, #{period,jdbcType=VARCHAR}, #{position,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{winResult,jdbcType=VARCHAR}, #{winPeriod,jdbcType=VARCHAR}, 
       #{win,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="plan.data.sql.entity.LotteryPlan">
@@ -50,11 +50,14 @@
       <if test="name != null">
         name,
       </if>
-      <if test="betType != null">
-        bet_type,
+      <if test="planType != null">
+        plan_type,
       </if>
-      <if test="betCount != null">
-        bet_count,
+      <if test="planCount != null">
+        plan_count,
+      </if>
+      <if test="planSchema != null">
+        plan_schema,
       </if>
       <if test="period != null">
         period,
@@ -62,14 +65,11 @@
       <if test="position != null">
         position,
       </if>
-      <if test="schema != null">
-        schema,
+      <if test="createTime != null">
+        create_time,
       </if>
-      <if test="time != null">
-        time,
-      </if>
-      <if test="result != null">
-        result,
+      <if test="winResult != null">
+        win_result,
       </if>
       <if test="winPeriod != null">
         win_period,
@@ -82,11 +82,14 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="betType != null">
-        #{betType,jdbcType=VARCHAR},
+      <if test="planType != null">
+        #{planType,jdbcType=VARCHAR},
       </if>
-      <if test="betCount != null">
-        #{betCount,jdbcType=INTEGER},
+      <if test="planCount != null">
+        #{planCount,jdbcType=INTEGER},
+      </if>
+      <if test="planSchema != null">
+        #{planSchema,jdbcType=VARCHAR},
       </if>
       <if test="period != null">
         #{period,jdbcType=VARCHAR},
@@ -94,14 +97,11 @@
       <if test="position != null">
         #{position,jdbcType=INTEGER},
       </if>
-      <if test="schema != null">
-        #{schema,jdbcType=VARCHAR},
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="time != null">
-        #{time,jdbcType=TIMESTAMP},
-      </if>
-      <if test="result != null">
-        #{result,jdbcType=VARCHAR},
+      <if test="winResult != null">
+        #{winResult,jdbcType=VARCHAR},
       </if>
       <if test="winPeriod != null">
         #{winPeriod,jdbcType=VARCHAR},
@@ -117,11 +117,14 @@
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="betType != null">
-        bet_type = #{betType,jdbcType=VARCHAR},
+      <if test="planType != null">
+        plan_type = #{planType,jdbcType=VARCHAR},
       </if>
-      <if test="betCount != null">
-        bet_count = #{betCount,jdbcType=INTEGER},
+      <if test="planCount != null">
+        plan_count = #{planCount,jdbcType=INTEGER},
+      </if>
+      <if test="planSchema != null">
+        plan_schema = #{planSchema,jdbcType=VARCHAR},
       </if>
       <if test="period != null">
         period = #{period,jdbcType=VARCHAR},
@@ -129,14 +132,11 @@
       <if test="position != null">
         position = #{position,jdbcType=INTEGER},
       </if>
-      <if test="schema != null">
-        schema = #{schema,jdbcType=VARCHAR},
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="time != null">
-        time = #{time,jdbcType=TIMESTAMP},
-      </if>
-      <if test="result != null">
-        result = #{result,jdbcType=VARCHAR},
+      <if test="winResult != null">
+        win_result = #{winResult,jdbcType=VARCHAR},
       </if>
       <if test="winPeriod != null">
         win_period = #{winPeriod,jdbcType=VARCHAR},
@@ -150,13 +150,13 @@
   <update id="updateByPrimaryKey" parameterType="plan.data.sql.entity.LotteryPlan">
     update lottery_plan
     set name = #{name,jdbcType=VARCHAR},
-      bet_type = #{betType,jdbcType=VARCHAR},
-      bet_count = #{betCount,jdbcType=INTEGER},
+      plan_type = #{planType,jdbcType=VARCHAR},
+      plan_count = #{planCount,jdbcType=INTEGER},
+      plan_schema = #{planSchema,jdbcType=VARCHAR},
       period = #{period,jdbcType=VARCHAR},
       position = #{position,jdbcType=INTEGER},
-      schema = #{schema,jdbcType=VARCHAR},
-      time = #{time,jdbcType=TIMESTAMP},
-      result = #{result,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      win_result = #{winResult,jdbcType=VARCHAR},
       win_period = #{winPeriod,jdbcType=VARCHAR},
       win = #{win,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}

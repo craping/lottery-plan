@@ -7,19 +7,19 @@ public class LotteryPlan {
 
     private String name;
 
-    private String betType;
+    private String planType;
 
-    private Integer betCount;
+    private Integer planCount;
+
+    private String planSchema;
 
     private String period;
 
     private Integer position;
 
-    private String schema;
+    private Date createTime;
 
-    private Date time;
-
-    private String result;
+    private String winResult;
 
     private String winPeriod;
 
@@ -41,20 +41,28 @@ public class LotteryPlan {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getBetType() {
-        return betType;
+    public String getPlanType() {
+        return planType;
     }
 
-    public void setBetType(String betType) {
-        this.betType = betType == null ? null : betType.trim();
+    public void setPlanType(String planType) {
+        this.planType = planType == null ? null : planType.trim();
     }
 
-    public Integer getBetCount() {
-        return betCount;
+    public Integer getPlanCount() {
+        return planCount;
     }
 
-    public void setBetCount(Integer betCount) {
-        this.betCount = betCount;
+    public void setPlanCount(Integer planCount) {
+        this.planCount = planCount;
+    }
+
+    public String getPlanSchema() {
+        return planSchema;
+    }
+
+    public void setPlanSchema(String planSchema) {
+        this.planSchema = planSchema == null ? null : planSchema.trim();
     }
 
     public String getPeriod() {
@@ -73,28 +81,20 @@ public class LotteryPlan {
         this.position = position;
     }
 
-    public String getSchema() {
-        return schema;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setSchema(String schema) {
-        this.schema = schema == null ? null : schema.trim();
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    public Date getTime() {
-        return time;
+    public String getWinResult() {
+        return winResult;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setResult(String result) {
-        this.result = result == null ? null : result.trim();
+    public void setWinResult(String winResult) {
+        this.winResult = winResult == null ? null : winResult.trim();
     }
 
     public String getWinPeriod() {
