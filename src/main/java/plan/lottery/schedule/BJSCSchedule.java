@@ -95,7 +95,7 @@ public class BJSCSchedule {
 		log.info("########## 插入记录：" + bettingList.size());
 	}
 	
-	@Scheduled(fixedDelay = 20000)
+	//@Scheduled(fixedDelay = 20000)
 	public void oprBJSCPlan() {
 		log.info("########## 开始每天保存推荐计划持久化任务 ##########");
 		List<LotteryPlan> result = new ArrayList<>();
