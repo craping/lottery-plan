@@ -23,4 +23,8 @@ public interface UserServer {
 	LotteryAdmin getAdminUser(String userName, String userPwd);
 
 	int updateAdminUser(Integer id, String token);
+
+	int lockUserAdmin(Integer id, Integer server_state);
+
+	int extension(Integer id, String server_end);
 }

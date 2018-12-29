@@ -1,7 +1,5 @@
 package plan.lottery.biz.server.impl;
 
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.crap.data.dao.sql.util.sql.Logic;
@@ -93,5 +91,17 @@ public class UserServerImpl implements UserServer {
 	@Override
 	public int addUser(LotteryUser user) {
 		return (int) serviceDao.getMapper().save(user);
+	}
+
+	@Override
+	public int lockUserAdmin(Integer id, Integer server_state) {
+		String sql = "UPDATE lottery_user SET server_state=? WHERE id=?";
+		return serviceDao.execute(sql, new Object[] { server_state, id });
+	}
+
+	@Override
+	public int extension(Integer id, String server_end) {
+		String sql = "UPDATE lottery_user SET server_end=? WHERE id=?";
+		return serviceDao.execute(sql, new Object[] { server_end, id });
 	}
 }
