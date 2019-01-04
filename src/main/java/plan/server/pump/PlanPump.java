@@ -38,6 +38,20 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	@Autowired
 	private StringRedisTemplate redisTemplate;
 	
+	@Pipe("info")
+	@BarScreen(
+		desc="查看具体方案详情",
+		params= {
+			@Parameter(type=TokenParam.class),
+			@Parameter(value="key")
+		}
+	)
+	public Errcode info (JSONObject params) {
+		Map<Object, Object> current_plan = redisTemplate.opsForHash().entries("plan_current");
+		JSONObject json = JSONObject.fromObject(current_plan.get(params.getString("key")));
+		return new DataResult(Errors.OK, new Data(json));
+	}
+	
 	@Pipe("getHistory")
 	@BarScreen(
 		desc="查看具体方案历史记录",
