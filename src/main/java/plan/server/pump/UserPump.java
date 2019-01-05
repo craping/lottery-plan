@@ -108,7 +108,10 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	
 	@Pipe("getUserInfo")
 	@BarScreen(
-		desc="获取用户信息"
+		desc="获取用户信息",
+		params= {
+			@Parameter(type=TokenParam.class)
+		}
 	)
 	public Errcode getUserInfo (JSONObject params) {
 		String key = "user_" + params.getString("token");
