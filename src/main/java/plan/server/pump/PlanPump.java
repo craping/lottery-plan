@@ -92,16 +92,16 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		pattern = pattern + params.getString("plan_count") + "_*";
 		
 		List<JSONObject> data = new ArrayList<>(); // 返回结果
-		long count = params.optLong("count"); // 查询数量
+		long count = params.optLong("count"); 
 		long rate = params.optLong("rate"); 
-		ScanOptions options = ScanOptions.scanOptions().match(pattern).count(count).build();
+		ScanOptions options = ScanOptions.scanOptions().match(pattern).build();
 		Cursor<Map.Entry<Object, Object>> curosr = redisTemplate.opsForHash().scan("plan_current", options);
         while(curosr.hasNext()){
             Map.Entry<Object, Object> entry = curosr.next();
             JSONObject plan = JSONObject.fromObject(entry.getValue());
             
             // 查询历史记录 计算胜率 最大连胜数
-            List<String> history = redisTemplate.opsForList().range("plan_history_" + plan.getString("key"), 0, rate-1);
+            List<String> history = redisTemplate.opsForList().range("plan_history_" + plan.getString("key"), 0, count-1);
             int idx = 0; 	  
 			int err_idx = 0;  // 未中奖次数
 			int win_idx = 0;  // 连胜次数
@@ -133,7 +133,8 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 			
 			// 最近战绩
 			plan.put("grade", idx + ":" + (idx-err_idx));
-			data.add(plan);
+			if (win_rate >= rate)
+				data.add(plan);
         }
 		return new DataResult(Errors.OK, new Data(data));
 	}
