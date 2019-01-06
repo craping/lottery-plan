@@ -74,6 +74,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		desc="筛选计划",
 		params= {
 			@Parameter(type=TokenParam.class),
+			@Parameter(value="lottery",  desc="彩种"),
 			@Parameter(value="type",  desc="计划玩法 DWD DX DS"),
 			@Parameter(value="position",  desc="方案位置", required=false),
 			@Parameter(value="plan_count",  desc="计划投注期数2,3期计划"),
@@ -86,7 +87,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 			return new DataResult(CustomErrors.PLAN_OPR_ERR);
 		
 		// 模糊搜索条件key 拼接
-		String pattern = params.getString("type") + "_"; 
+		String pattern = params.getString("lottery") + "_" + params.getString("type") + "_"; 
 		if (!Tools.isStrEmpty(params.optString("position")))
 			pattern += (params.getString("position") + "_");
 		pattern = pattern + params.getString("plan_count") + "_*";
