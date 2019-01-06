@@ -49,7 +49,8 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		}
 	)
 	public Errcode info (JSONObject params) {
-		JSONObject info = (JSONObject) redisTemplate.opsForHash().get("plan_current", params.optString("key"));
+		JSONObject info = JSONObject.fromObject(redisTemplate.opsForHash().get("plan_current", 
+				params.optString("key")));
 		return new DataResult(Errors.OK, new Data(info));
 	}
 	
