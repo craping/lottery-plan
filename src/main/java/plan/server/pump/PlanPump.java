@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.FullHttpRequest;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import plan.lottery.common.CustomErrors;
 import plan.lottery.common.param.TokenParam;
@@ -52,38 +53,20 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		return new DataResult(Errors.OK, new Data(json));
 	}
 	
-	@Pipe("getHistory")
+	@Pipe("history")
 	@BarScreen(
 		desc="查看具体方案历史记录",
 		params= {
 			@Parameter(type=TokenParam.class),
-			@Parameter(value="name",  desc="计划名称"),
-			@Parameter(value="type",  desc="计划玩法 DWD DX DS"),
-			@Parameter(value="position",  desc="方案位置", required=false),
-			@Parameter(value="plan_count",  desc="计划投注期数2,3期计划"),
+			@Parameter(value="key"),
 			@Parameter(value="count",  desc="查询数量")
 		}
 	)
 	public Errcode getHistory (JSONObject params) {
-		List<JSONObject> result = new ArrayList<>(); // 查询结果
-		Map<Object, Object> history_plan = redisTemplate.opsForHash().entries("plan_history");
-		if (history_plan == null || history_plan.isEmpty())
-			return new DataResult(Errors.OK, new Data(result));
-		
-		// 模糊搜索条件key 拼接
-		String current_plan_key = params.getString("type") + "_"; 
-		if (!Tools.isStrEmpty(params.optString("position")))
-			current_plan_key += (params.getString("position") + "_");
-		current_plan_key = current_plan_key + params.getString("plan_count") + "_" + Coder.encryptMD5(params.getString("name"));
-		
-		for (Object key : history_plan.keySet()) {
-			if (result.size() >= params.getInt("count")) 
-				break;
-			
-			if (key.toString().contains(current_plan_key)) 
-				result.add(JSONObject.fromObject(history_plan.get(key)));
-		}
-		return new DataResult(Errors.OK, new Data(result));
+		List<String> result = redisTemplate.opsForList().range(params.optString("key"), 0, params.optLong("count")-1);
+		@SuppressWarnings("unchecked")
+		List<JSONArray> l = JSONArray.fromObject(result);
+		return new DataResult(Errors.OK, new Data(l));
 	}
 	
 	@Pipe("search")
