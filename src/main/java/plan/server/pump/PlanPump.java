@@ -63,7 +63,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		}
 	)
 	public Errcode history (JSONObject params) {
-		List<String> result = redisTemplate.opsForList().range(params.optString("key"), 0, params.optLong("count")-1);
+		List<String> result = redisTemplate.opsForList().range("plan_history_" + params.optString("key"), 0, params.optLong("count")-1);
 		@SuppressWarnings("unchecked")
 		List<JSONArray> l = JSONArray.fromObject(result);
 		return new DataResult(Errors.OK, new Data(l));
