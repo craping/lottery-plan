@@ -16,8 +16,9 @@ import org.crap.jrain.core.bean.result.criteria.DataResult;
 import org.crap.jrain.core.error.support.Errors;
 import org.crap.jrain.core.validate.annotation.BarScreen;
 import org.crap.jrain.core.validate.annotation.Parameter;
-import org.crap.jrain.core.validate.security.component.Coder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.Cursor;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -48,9 +49,8 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		}
 	)
 	public Errcode info (JSONObject params) {
-		Map<Object, Object> current_plan = redisTemplate.opsForHash().entries("plan_current");
-		JSONObject json = JSONObject.fromObject(current_plan.get(params.getString("key")));
-		return new DataResult(Errors.OK, new Data(json));
+		JSONObject info = (JSONObject) redisTemplate.opsForHash().get("plan_current", params.optString("key"));
+		return new DataResult(Errors.OK, new Data(info));
 	}
 	
 	@Pipe("history")
@@ -62,7 +62,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 			@Parameter(value="count",  desc="查询数量")
 		}
 	)
-	public Errcode getHistory (JSONObject params) {
+	public Errcode history (JSONObject params) {
 		List<String> result = redisTemplate.opsForList().range(params.optString("key"), 0, params.optLong("count")-1);
 		@SuppressWarnings("unchecked")
 		List<JSONArray> l = JSONArray.fromObject(result);
@@ -82,114 +82,69 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		}
 	)
 	public Errcode search (JSONObject params) {
-		Map<Object, Object> current_plan = redisTemplate.opsForHash().entries("plan_current");
-		if (current_plan == null || current_plan.isEmpty())
+		if (!redisTemplate.hasKey("plan_current"))
 			return new DataResult(CustomErrors.PLAN_OPR_ERR);
 		
 		// 模糊搜索条件key 拼接
-		String current_plan_key = params.getString("type") + "_"; 
+		String pattern = params.getString("type") + "_"; 
 		if (!Tools.isStrEmpty(params.optString("position")))
-			current_plan_key += (params.getString("position") + "_");
-		current_plan_key = current_plan_key + params.getString("plan_count") + "_";
+			pattern += (params.getString("position") + "_");
+		pattern = pattern + params.getString("plan_count") + "_*";
 		
-		List<JSONObject> result = new ArrayList<>(); // 匹配结果集
-		for (Object key : current_plan.keySet()) {
-			if (result.size() >= params.getInt("count"))
-				break;
-			
-			if (key.toString().contains(current_plan_key)) {
-				// 计算胜率
-				Map<Object, Object> history_plan = redisTemplate.opsForHash().entries("plan_history"); 
-				JSONObject current_json = JSONObject.fromObject(current_plan.get(key));
-				String flag_current_key = current_plan_key + Coder.encryptMD5(current_json.getString("name"));
-				
-				int idx = 0; 	  
-				int err_idx = 0;  // 未中奖次数
-				int win_idx = 0;  // 连胜次数
-				List<Integer> win_idx_list = new ArrayList<>(); // 连胜次数集合
-				for (Object history_key : history_plan.keySet()) {
-					if (idx >= params.getInt("rate"))
-						break;
-					if (history_key.toString().contains(flag_current_key)) {
-						idx++;
-						JSONObject history_json = JSONObject.fromObject(history_plan.get(history_key));
-						if (history_json.getString("win").equals("1")) {
-							win_idx++;
-							win_idx_list.add(win_idx);
-						} else {
-							err_idx++;
-							win_idx_list.add(win_idx);
-							win_idx = 0; // 连胜次数复位
-						}
-					}
+		List<JSONObject> data = new ArrayList<>(); // 返回结果
+		long count = params.optLong("count"); // 查询数量
+		long rate = params.optLong("rate"); 
+		ScanOptions options = ScanOptions.scanOptions().match(pattern).count(count).build();
+		Cursor<Map.Entry<Object, Object>> curosr = redisTemplate.opsForHash().scan("plan_current", options);
+        while(curosr.hasNext()){
+            Map.Entry<Object, Object> entry = curosr.next();
+            JSONObject plan = JSONObject.fromObject(entry.getValue());
+            
+            // 查询历史记录 计算胜率 最大连胜数
+            List<String> history = redisTemplate.opsForList().range("plan_history_" + plan.getString("key"), 0, rate-1);
+            int idx = 0; 	  
+			int err_idx = 0;  // 未中奖次数
+			int win_idx = 0;  // 连胜次数
+			List<Integer> win_idx_list = new ArrayList<>(); // 连胜次数集合
+			for (int i = 0; i < history.size(); i++) {
+				idx++;
+				JSONObject his_plan = JSONObject.fromObject(history.get(i));
+				if (his_plan.getBoolean("pre_win")) {
+					win_idx++;
+					win_idx_list.add(win_idx);
+				} else {
+					err_idx++;
+					win_idx_list.add(win_idx);
+					win_idx = 0; // 连胜次数复位
 				}
-				
-				double win_rate = 0;
-				if (Arith.sub(idx, err_idx) > 0)
-					win_rate = Arith.div(Arith.sub(idx, err_idx), idx);
-				current_json.put("win_rate", win_rate);
-				
-				if (win_idx_list.size() > 0) {
-					Collections.sort(win_idx_list);
-					current_json.put("win_num", win_idx_list.get(win_idx_list.size()-1));
-				}
-				result.add(current_json);
 			}
-		}
-		return new DataResult(Errors.OK, new Data(result));
+			
+			// 胜率
+			double win_rate = 0;
+			if (Arith.sub(idx, err_idx) > 0)
+				win_rate = Arith.div(Arith.sub(idx, err_idx), idx);
+			plan.put("win_rate", win_rate);
+			
+			// 最大连胜次数
+			if (win_idx_list.size() > 0) {
+				Collections.sort(win_idx_list);
+				plan.put("win_num", win_idx_list.get(win_idx_list.size()-1));
+			}
+			
+			// 最近战绩
+			plan.put("grade", idx + ":" + (idx-err_idx));
+			data.add(plan);
+        }
+		return new DataResult(Errors.OK, new Data(data));
 	}
 	
 	@Pipe("save")
 	@BarScreen(
 		desc="保存计划",
-		params= {
-			@Parameter(value="name",  desc="计划名称"),
-			@Parameter(value="type",  desc="计划玩法 DWD DX DS"),
-			@Parameter(value="plan_count",  desc="计划投注期数2,3期计划"),
-			@Parameter(value="period",  desc="计划期号111-113"),
-			@Parameter(value="position",  desc="方案位置", required=false),
-			@Parameter(value="schema",  desc="计划号码"),
-			@Parameter(value="pre_result",  desc="上期开奖结果", required=false),
-			@Parameter(value="pre_period",  desc="上期中奖期号", required=false),
-			@Parameter(value="pre_win",  desc="上期状态1中奖0未中奖2等待", required=false)
-		}
+		params= {}
 	)
 	public Errcode save (JSONObject params) {
 		// TODO: 加入ip限制 绑定
-		String name = params.getString("name");
-		JSONObject plan_info = new JSONObject();
-		plan_info.put("name", name);
-		plan_info.put("plan_type", params.getString("type"));
-		plan_info.put("plan_count", params.getString("plan_count"));
-		plan_info.put("plan_schema", params.getString("schema"));
-		plan_info.put("period", params.getString("period"));
-		plan_info.put("position", params.optString("position", ""));
-		plan_info.put("create_time", Tools.getSysTimeFormat("yyyy-MM-dd HH:mm:ss"));
-		plan_info.put("win_result", "");
-		plan_info.put("win_period", "");
-		plan_info.put("win", "");
-		
-		String current_key = "plan_current"; // 执行中计划key
-		String history_key = "plan_history"; // 历史计划key
-		String current_plan_key = params.getString("type") + "_"; // 当前操作计划key
-		if (!Tools.isStrEmpty(params.optString("position")))
-			current_plan_key += (params.getString("position") + "_");
-		current_plan_key = current_plan_key + params.getString("plan_count") + "_" + Coder.encryptMD5(name);
-		
-		// 先处理上一期计划 更新 中奖状态 开奖结果 记录中奖期 
-		Map<Object, Object> current_plan = redisTemplate.opsForHash().entries(current_key);
-		String pre_plan = (String) current_plan.get(current_plan_key); 
-		if (!Tools.isStrEmpty(pre_plan)) {
-			JSONObject obj = JSONObject.fromObject(pre_plan);
-			obj.put("win", params.optString("pre_win", "0"));
-			obj.put("win_period", params.optString("pre_period", ""));
-			obj.put("win_result", params.optString("pre_result", ""));
-			// 保存到计划历史记录
-			redisTemplate.opsForHash().put(history_key, current_plan_key+"_"+obj.getString("period"), obj.toString());
-		}
-		
-		// 更新覆盖当前计划
-		redisTemplate.opsForHash().put(current_key, current_plan_key, plan_info.toString());
 		return new DataResult(Errors.OK);
 	}
 }
