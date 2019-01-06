@@ -109,7 +109,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 			for (int i = 0; i < history.size(); i++) {
 				idx++;
 				JSONObject his_plan = JSONObject.fromObject(history.get(i));
-				if (his_plan.getBoolean("pre_win")) {
+				if (his_plan.getBoolean("win")) {
 					win_idx++;
 					win_idx_list.add(win_idx);
 				} else {
