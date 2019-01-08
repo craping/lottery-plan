@@ -10,7 +10,6 @@
     <result column="phone_num" jdbcType="INTEGER" property="phoneNum" />
     <result column="phone_state" jdbcType="INTEGER" property="phoneState" />
     <result column="locked" jdbcType="INTEGER" property="locked" />
-    <result column="server_state" jdbcType="INTEGER" property="serverState" />
     <result column="server_start" jdbcType="TIMESTAMP" property="serverStart" />
     <result column="server_end" jdbcType="TIMESTAMP" property="serverEnd" />
     <result column="reg_time" jdbcType="TIMESTAMP" property="regTime" />
@@ -19,8 +18,8 @@
     <result column="cdkey" jdbcType="VARCHAR" property="cdkey" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, user_name, user_pwd, qq, wechat, phone_num, phone_state, locked, server_state, 
-    server_start, server_end, reg_time, reg_ip, token, cdkey
+    id, user_name, user_pwd, qq, wechat, phone_num, phone_state, locked, server_start, 
+    server_end, reg_time, reg_ip, token, cdkey
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -38,14 +37,14 @@
     </selectKey>
     insert into lottery_user (user_name, user_pwd, qq, 
       wechat, phone_num, phone_state, 
-      locked, server_state, server_start, 
-      server_end, reg_time, reg_ip, 
-      token, cdkey)
+      locked, server_start, server_end, 
+      reg_time, reg_ip, token, 
+      cdkey)
     values (#{userName,jdbcType=VARCHAR}, #{userPwd,jdbcType=VARCHAR}, #{qq,jdbcType=VARCHAR}, 
       #{wechat,jdbcType=VARCHAR}, #{phoneNum,jdbcType=INTEGER}, #{phoneState,jdbcType=INTEGER}, 
-      #{locked,jdbcType=INTEGER}, #{serverState,jdbcType=INTEGER}, #{serverStart,jdbcType=TIMESTAMP}, 
-      #{serverEnd,jdbcType=TIMESTAMP}, #{regTime,jdbcType=TIMESTAMP}, #{regIp,jdbcType=VARCHAR}, 
-      #{token,jdbcType=VARCHAR}, #{cdkey,jdbcType=VARCHAR})
+      #{locked,jdbcType=INTEGER}, #{serverStart,jdbcType=TIMESTAMP}, #{serverEnd,jdbcType=TIMESTAMP}, 
+      #{regTime,jdbcType=TIMESTAMP}, #{regIp,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}, 
+      #{cdkey,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="plan.data.sql.entity.LotteryUser">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -73,9 +72,6 @@
       </if>
       <if test="locked != null">
         locked,
-      </if>
-      <if test="serverState != null">
-        server_state,
       </if>
       <if test="serverStart != null">
         server_start,
@@ -117,9 +113,6 @@
       </if>
       <if test="locked != null">
         #{locked,jdbcType=INTEGER},
-      </if>
-      <if test="serverState != null">
-        #{serverState,jdbcType=INTEGER},
       </if>
       <if test="serverStart != null">
         #{serverStart,jdbcType=TIMESTAMP},
@@ -165,9 +158,6 @@
       <if test="locked != null">
         locked = #{locked,jdbcType=INTEGER},
       </if>
-      <if test="serverState != null">
-        server_state = #{serverState,jdbcType=INTEGER},
-      </if>
       <if test="serverStart != null">
         server_start = #{serverStart,jdbcType=TIMESTAMP},
       </if>
@@ -198,7 +188,6 @@
       phone_num = #{phoneNum,jdbcType=INTEGER},
       phone_state = #{phoneState,jdbcType=INTEGER},
       locked = #{locked,jdbcType=INTEGER},
-      server_state = #{serverState,jdbcType=INTEGER},
       server_start = #{serverStart,jdbcType=TIMESTAMP},
       server_end = #{serverEnd,jdbcType=TIMESTAMP},
       reg_time = #{regTime,jdbcType=TIMESTAMP},

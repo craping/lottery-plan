@@ -3,6 +3,7 @@ package plan.server.pump;
 import java.io.IOException;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Component;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.FullHttpRequest;
 import net.sf.json.JSONObject;
+import plan.data.sql.entity.LotteryUser;
 import plan.server.HttpServer;
 
 @Pump("api")
@@ -72,5 +74,12 @@ public class ApiPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		players.add("3");
 		players.forEach((player) -> System.out.println(player + "; "));
 		players.forEach(System.out::print);
+		
+		LotteryUser user = new LotteryUser();
+		user.setId(1);
+		user.setCdkey("111111111");
+		user.setServerEnd(new Date());
+		System.out.println(JSONObject.fromObject(user));
+		
 	}
 }

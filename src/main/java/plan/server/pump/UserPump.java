@@ -1,7 +1,7 @@
 package plan.server.pump;
 
 import java.net.InetSocketAddress;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -14,11 +14,9 @@ import org.crap.jrain.core.bean.result.Result;
 import org.crap.jrain.core.bean.result.criteria.Data;
 import org.crap.jrain.core.bean.result.criteria.DataResult;
 import org.crap.jrain.core.error.support.Errors;
-import org.crap.jrain.core.util.DateUtil;
 import org.crap.jrain.core.util.StringUtil;
 import org.crap.jrain.core.validate.annotation.BarScreen;
 import org.crap.jrain.core.validate.annotation.Parameter;
-import org.crap.jrain.core.validate.security.component.Coder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -27,9 +25,7 @@ import io.netty.channel.Channel;
 import io.netty.handler.codec.http.FullHttpRequest;
 import net.sf.json.JSONObject;
 import plan.data.sql.entity.LotteryUser;
-import plan.data.sql.entity.LotteryUserSetting;
 import plan.lottery.biz.server.UserServer;
-import plan.lottery.biz.server.UserSettingServer;
 import plan.lottery.common.CustomErrors;
 import plan.lottery.common.param.TokenParam;
 
@@ -43,8 +39,6 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	private StringRedisTemplate redisTemplate;
 	@Autowired
 	private UserServer userServer;
-	@Autowired
-	private UserSettingServer settingServer;
 	
 	@Pipe("login")
 	@BarScreen(
@@ -61,21 +55,10 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		if (user == null) //判断用户是否存在
 			return new Result(CustomErrors.USER_ACC_ERR);
 		
-		String flag = "user_";
-		String old_token = user.getToken(); 	// 获取上一次用户token
-		String new_token = StringUtil.uuid(); 	// 生成新的用户token
-	
-		Map<Object, Object> userMap = redisTemplate.opsForHash().entries(flag + old_token);
-		if (userMap == null || userMap.isEmpty()) {
-			userMap.put("uid", user.getId().toString());
-			userMap.put("user_name", user.getUserName());
-			userMap.put("user_pwd", user.getUserPwd());
-			userMap.put("server_end", DateUtil.formatDate("yyyyMMddHHmmss", user.getServerEnd()));
-		} else {
-			redisTemplate.delete(flag+old_token);
-		}
+		redisTemplate.delete("user_" + user.getToken()); //  删除当前缓存
 		
-		// 保存用户token 持久化
+		// 生成新的用户token 并持久化
+		String new_token = StringUtil.uuid(); 	
 		user.setToken(new_token);
 		int result = userServer.updateUser(user);
 		if (result == 1) {
@@ -83,12 +66,20 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 			InetSocketAddress insocket = (InetSocketAddress) getResponse().remoteAddress();
 			System.out.println("IP:"+insocket.getAddress().getHostAddress());
 			userServer.insertLoginLog(user.getId(), insocket.getAddress().getHostAddress());
-			// 缓存用户配置信息
+			/*// 缓存用户配置信息
 			List<LotteryUserSetting> settings = settingServer.getSettings(user.getId());
 			settings.forEach((setting) -> 
 				userMap.put("setting" + setting.getId() + "_" + Coder.encryptMD5(setting.getName()), JSONObject.fromObject(setting).toString())
-			);
-			redisTemplate.opsForHash().putAll(flag+new_token, userMap);
+			);*/
+			Map<Object, Object> userMap = new HashMap<Object, Object>();
+			userMap.put("id", user.getId().toString());
+			userMap.put("locked", user.getLocked().toString());
+			userMap.put("userName", user.getUserName());
+			userMap.put("userPwd", user.getUserPwd());
+			userMap.put("serverStart", String.valueOf(user.getServerStart().getTime()));
+			userMap.put("serverEnd", String.valueOf(user.getServerEnd().getTime()));
+			userMap.put("token", new_token);
+			redisTemplate.opsForHash().putAll("user_" + new_token, userMap);
 		} else {
 			return new Result(CustomErrors.USER_LOGIN_ERR_EX);
 		}

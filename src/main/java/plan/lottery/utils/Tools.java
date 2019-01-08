@@ -315,8 +315,8 @@ public class Tools {
 	 * @return
 	 */
 	public static boolean isOverTime(Long verifyTime, int limit) {
-		long currentTimeSecond = Long.parseLong(String.valueOf(System.currentTimeMillis()).toString().substring(0, 10));
-		verifyTime = Long.parseLong(String.valueOf(verifyTime).substring(0, 10));
+		long currentTimeSecond = Long.parseLong(String.valueOf(System.currentTimeMillis()).toString().substring(0, 13));
+		verifyTime = Long.parseLong(String.valueOf(verifyTime));
 		Long IntervalTime = (currentTimeSecond - verifyTime);
 		if (IntervalTime > (limit * 60)) {
 			return true;
