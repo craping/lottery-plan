@@ -75,6 +75,7 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 			userMap.put("id", user.getId().toString());
 			userMap.put("locked", user.getLocked().toString());
 			userMap.put("userName", user.getUserName());
+			userMap.put("regTime", String.valueOf(user.getRegTime().getTime()));
 			userMap.put("serverStart", String.valueOf(user.getServerStart().getTime()));
 			userMap.put("serverEnd", String.valueOf(user.getServerEnd().getTime()));
 			userMap.put("token", new_token);
@@ -107,6 +108,9 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		String key = "user_" + params.getString("token");
 		Map<Object, Object> userMap = redisTemplate.opsForHash().entries(key);
 		userMap.remove("user_pwd");
+		userMap.put("regTime", Long.valueOf(userMap.get("regTime").toString()));
+		userMap.put("serverStart", Long.valueOf(userMap.get("serverStart").toString()));
+		userMap.put("serverEnd", Long.valueOf(userMap.get("serverEnd").toString()));
 		return new DataResult(Errors.OK, new Data(userMap));
 	}
 	
