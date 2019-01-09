@@ -111,6 +111,8 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		userMap.put("regTime", Long.valueOf(userMap.get("regTime").toString()));
 		userMap.put("serverStart", Long.valueOf(userMap.get("serverStart").toString()));
 		userMap.put("serverEnd", Long.valueOf(userMap.get("serverEnd").toString()));
+		userMap.put("locked", Integer.valueOf(userMap.get("locked").toString()));
+		userMap.put("id", Integer.valueOf(userMap.get("id").toString()));
 		return new DataResult(Errors.OK, new Data(userMap));
 	}
 	
