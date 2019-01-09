@@ -44,6 +44,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	@BarScreen(
 		desc="查看具体方案详情",
 		params= {
+			@Parameter(type=TokenParam.class),
 			@Parameter(value="key")
 		}
 	)
@@ -72,6 +73,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	@BarScreen(
 		desc="筛选计划",
 		params= {
+			@Parameter(type=TokenParam.class),
 			@Parameter(value="lottery",  desc="彩种"),
 			@Parameter(value="type",  desc="计划玩法 DWD DX DS"),
 			@Parameter(value="position",  desc="方案位置", required=false),
