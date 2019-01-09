@@ -75,7 +75,6 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 			userMap.put("id", user.getId().toString());
 			userMap.put("locked", user.getLocked().toString());
 			userMap.put("userName", user.getUserName());
-			userMap.put("userPwd", user.getUserPwd());
 			userMap.put("serverStart", String.valueOf(user.getServerStart().getTime()));
 			userMap.put("serverEnd", String.valueOf(user.getServerEnd().getTime()));
 			userMap.put("token", new_token);
