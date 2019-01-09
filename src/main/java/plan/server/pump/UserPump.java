@@ -28,6 +28,8 @@ import plan.data.sql.entity.LotteryUser;
 import plan.lottery.biz.server.UserServer;
 import plan.lottery.common.CustomErrors;
 import plan.lottery.common.param.TokenParam;
+import plan.lottery.utils.RedisUtil;
+import plan.lottery.utils.Tools;
 
 @Pump("user")
 @Component
@@ -99,13 +101,16 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	
 	@Pipe("getUserInfo")
 	@BarScreen(
-		desc="获取用户信息",
-		params= {
-			@Parameter(type=TokenParam.class)
-		}
+		desc="获取用户信息"
 	)
 	public Errcode getUserInfo (JSONObject params) {
+		if (Tools.isStrEmpty(params.optString("token")))
+			return new Result(CustomErrors.USER_TOKEN_NULL);
+		
 		String key = "user_" + params.getString("token");
+		if (!(new RedisUtil().exists(key))) 
+			return new Result(CustomErrors.USER_NOT_LOGIN);
+		
 		Map<Object, Object> userMap = redisTemplate.opsForHash().entries(key);
 		userMap.remove("user_pwd");
 		userMap.put("regTime", Long.valueOf(userMap.get("regTime").toString()));
