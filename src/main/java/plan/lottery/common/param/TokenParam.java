@@ -1,7 +1,12 @@
 package plan.lottery.common.param;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.crap.jrain.core.bean.result.Errcode;
 import org.crap.jrain.core.bean.result.Result;
+import org.crap.jrain.core.bean.result.criteria.Data;
+import org.crap.jrain.core.bean.result.criteria.DataResult;
 import org.crap.jrain.core.error.support.Errors;
 import org.crap.jrain.core.validate.exception.ValidationException;
 import org.crap.jrain.core.validate.support.param.SingleParam;
@@ -29,13 +34,22 @@ public class TokenParam extends StringParam implements SingleParam {
 			return new Result(CustomErrors.USER_NOT_LOGIN);
 		}
 		
+		Map<String, String> userMap = new RedisUtil().hgetall(key);
+		Map<String, Object> info = new HashMap<>();
+		info.put("id", Integer.valueOf(userMap.get("id")));
+		info.put("locked", Integer.valueOf(userMap.get("locked")));
+		info.put("userName", userMap.get("userName"));
+		info.put("regTime", Long.valueOf(userMap.get("regTime")));
+		info.put("serverStart", Long.valueOf(userMap.get("serverStart")));
+		info.put("serverEnd", Long.valueOf(userMap.get("serverEnd")));
+		info.put("token", userMap.get("token"));
 		if (!(new RedisUtil().hget(key, "locked").equals("0"))) {
-			return new Result(CustomErrors.USER_LOCKED);
+			return new DataResult(CustomErrors.USER_LOCKED, new Data(info));
 		}
 		
 		long serverEnd = Long.parseLong(new RedisUtil().hget(key, "serverEnd"));
 		if (Tools.isOverTime(serverEnd, 5)) {
-			return new Result(CustomErrors.USER_SERVER_END);
+			return new DataResult(CustomErrors.USER_SERVER_END, new Data(info));
 		}
 		
 		return Errors.OK;
