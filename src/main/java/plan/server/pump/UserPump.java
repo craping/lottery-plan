@@ -133,25 +133,20 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	)
 	public Errcode changePwd (JSONObject params) {
 		String key = "user_" + params.getString("token");
-		// 获取缓存
-		Map<Object, Object> userMap = redisTemplate.opsForHash().entries(key);
-		String user_name = userMap.get("user_name").toString();
-		String user_pwd = userMap.get("user_pwd").toString();
-		if (!params.getString("old_pwd").equals(user_pwd))
-			return new Result(CustomErrors.USER_PWD_ERR);
-		
+		String userName = redisTemplate.opsForHash().get(key, "userName").toString();
+		String old_pwd = params.getString("old_pwd");
 		String new_pwd = params.getString("new_pwd");
 		String confirm_pwd = params.getString("confirm_pwd");
 		if (new_pwd != confirm_pwd && !new_pwd.equals(confirm_pwd))
 			return new Result(CustomErrors.USER_CHANGE_PWD_ERR);
 		
-		LotteryUser user = userServer.getUser(user_name, user_pwd);
-		user.setUserPwd(new_pwd);
+		LotteryUser user = userServer.getUser(userName, old_pwd);
+		if (user == null)
+			return new Result(CustomErrors.USER_PWD_ERR);
 		
+		user.setUserPwd(new_pwd);
 		int result = userServer.updateUser(user);
-		if (result == 1) {
-			redisTemplate.opsForHash().put(key, "user_pwd", new_pwd);
-		} else {
+		if (result != 1) {
 			return new Result(CustomErrors.USER_OPR_ERR);
 		}
 		return new DataResult(Errors.OK);
