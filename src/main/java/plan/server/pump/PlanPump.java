@@ -89,22 +89,19 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 			return new DataResult(CustomErrors.PLAN_OPR_ERR);
 		
 		// 模糊搜索条件key 拼接
-		String pattern = "";
-		if (!Tools.isStrEmpty(params.optString("lottery")))
-			pattern = params.optString("lottery") + "_";
-		if (!Tools.isStrEmpty(params.optString("type")))
-			pattern = pattern + params.optString("type") + "_"; 
-		if (!Tools.isStrEmpty(params.optString("position")))
-			pattern = pattern + params.optString("position") + "_"; 
-		if (!Tools.isStrEmpty(params.optString("plan_count")))
-			pattern = pattern + params.optString("plan_count") + "_";
-		if (!Tools.isStrEmpty(pattern))
-			pattern = pattern + "*";
+		StringBuffer pattern = new StringBuffer(params.getString("lottery"));
+		pattern.append("_");
+		pattern.append(params.optString("type", "*")); 
+		pattern.append("_");
+		pattern.append(params.optString("position", "*")); 
+		pattern.append("_");
+		pattern.append(params.optString("plan_count", "*")); 
+		pattern.append("_*");
 		
 		List<JSONObject> data = new ArrayList<>(); // 返回结果
 		long count = params.optLong("count"); 
 		double rate = params.optDouble("rate"); 
-		ScanOptions options = ScanOptions.scanOptions().match(pattern).build();
+		ScanOptions options = ScanOptions.scanOptions().match(pattern.toString()).build();
 		Cursor<Map.Entry<Object, Object>> curosr = redisTemplate.opsForHash().scan("plan_current", options);
         while(curosr.hasNext()){
             Map.Entry<Object, Object> entry = curosr.next();
