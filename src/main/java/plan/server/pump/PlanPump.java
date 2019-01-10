@@ -87,10 +87,15 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 			return new DataResult(CustomErrors.PLAN_OPR_ERR);
 		
 		// 模糊搜索条件key 拼接
-		String pattern = params.getString("lottery") + "_" + params.getString("type") + "_"; 
+		String pattern = "";
+		if (!Tools.isStrEmpty(params.optString("lottery")))
+			pattern = params.optString("lottery") + "_";
+		if (!Tools.isStrEmpty(params.optString("type")))
+			pattern = pattern + params.optString("type") + "_"; 
 		if (!Tools.isStrEmpty(params.optString("position")))
-			pattern += (params.getString("position") + "_");
-		pattern = pattern + params.getString("plan_count") + "_*";
+			pattern = pattern + params.optString("position") + "_"; 
+		if (!Tools.isStrEmpty(params.optString("plan_count")))
+			pattern = pattern + params.optString("plan_count") + "_*";
 		
 		List<JSONObject> data = new ArrayList<>(); // 返回结果
 		long count = params.optLong("count"); 
@@ -102,7 +107,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
             JSONObject plan = JSONObject.fromObject(entry.getValue());
             
             // 查询历史记录 计算胜率 最大连胜数
-            List<String> history = redisTemplate.opsForList().range("plan_history_" + plan.getString("key"), 0, count-1);
+            List<String> history = redisTemplate.opsForList().range("plan_history_" + plan.optString("key"), 0, count-1);
             int idx = 0; 	  
 			int err_idx = 0;  // 未中奖次数
 			int win_idx = 0;  // 连胜次数
