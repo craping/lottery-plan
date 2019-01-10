@@ -43,4 +43,17 @@ public class AdminPlanPump extends DataPump<JSONObject, FullHttpRequest, Channel
 		});
 		return new DataResult(Errors.OK, new Data(result));
 	}	
+	
+	@Pipe("history")
+	@BarScreen(
+		desc="历史计划列表"
+	)
+	public Errcode history (JSONObject params) {
+		Map<Object, Object> current_plan = redisTemplate.opsForHash().entries("plan_current");
+		List<JSONObject> result = new ArrayList<>();
+		current_plan.forEach((key, value) -> {
+			result.add(JSONObject.fromObject(value));
+		});
+		return new DataResult(Errors.OK, new Data(result));
+	}
 }

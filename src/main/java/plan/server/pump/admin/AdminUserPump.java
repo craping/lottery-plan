@@ -76,11 +76,11 @@ public class AdminUserPump extends DataPump<JSONObject, FullHttpRequest, Channel
 		desc="锁定用户",
 		params= {
 			@Parameter(value="id",  desc="用户id"),
-			@Parameter(value="server_state",  desc="服务状态")
+			@Parameter(value="locked",  desc="服务状态")
 		}
 	)
 	public Errcode lock (JSONObject params) {
-		userServer.lockUserAdmin(params.getInt("id"), params.getInt("server_state"));
+		userServer.lockUserAdmin(params.getInt("id"), params.getInt("locked"));
 		return new DataResult(Errors.OK);
 	}
 }

@@ -7,6 +7,8 @@ public class LotteryPlan {
 
     private String name;
 
+    private String lottery;
+
     private String planType;
 
     private Integer planCount;
@@ -39,6 +41,14 @@ public class LotteryPlan {
 
     public void setName(String name) {
         this.name = name == null ? null : name.trim();
+    }
+
+    public String getLottery() {
+        return lottery;
+    }
+
+    public void setLottery(String lottery) {
+        this.lottery = lottery == null ? null : lottery.trim();
     }
 
     public String getPlanType() {

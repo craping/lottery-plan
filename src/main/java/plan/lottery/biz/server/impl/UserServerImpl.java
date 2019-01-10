@@ -94,9 +94,9 @@ public class UserServerImpl implements UserServer {
 	}
 
 	@Override
-	public int lockUserAdmin(Integer id, Integer server_state) {
-		String sql = "UPDATE lottery_user SET server_state=? WHERE id=?";
-		return serviceDao.execute(sql, new Object[] { server_state, id });
+	public int lockUserAdmin(Integer id, Integer locked) {
+		String sql = "UPDATE lottery_user SET locked=? WHERE id=?";
+		return serviceDao.execute(sql, new Object[] { locked, id });
 	}
 
 	@Override

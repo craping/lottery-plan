@@ -74,10 +74,10 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		desc="筛选计划",
 		params= {
 			@Parameter(type=TokenParam.class),
-			@Parameter(value="lottery",  desc="彩种"),
-			@Parameter(value="type",  desc="计划玩法 DWD DX DS"),
+			@Parameter(value="lottery",  desc="彩种", required=false),
+			@Parameter(value="type",  desc="计划玩法 DWD DX DS", required=false),
 			@Parameter(value="position",  desc="方案位置", required=false),
-			@Parameter(value="plan_count",  desc="计划投注期数2,3期计划"),
+			@Parameter(value="plan_count",  desc="计划投注期数2,3期计划", required=false),
 			@Parameter(value="count",  desc="查询数量"),
 			@Parameter(value="rate", desc="胜率计算数")
 		}
@@ -127,6 +127,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 			plan.put("win_rate", win_rate);
 			
 			// 最大连胜次数
+			plan.put("win_num", win_idx_list.size());
 			if (win_idx_list.size() > 0) {
 				Collections.sort(win_idx_list);
 				plan.put("win_num", win_idx_list.get(win_idx_list.size()-1));

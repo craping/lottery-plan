@@ -51,8 +51,8 @@ public class BetPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		Map<Object, Object> userMap = redisTemplate.opsForHash().entries(user_key);
 		String key = "betting_" + params.getString("period"); 
 		JSONObject info = new JSONObject();
-		info.put("uid", userMap.get("uid"));
-		info.put("user_name", userMap.get("user_name"));
+		info.put("uid", userMap.get("id"));
+		info.put("userName", userMap.get("userName"));
 		info.put("lottery_type", params.getString("lottery_type"));
 		info.put("bet_type", params.getString("bet_type"));
 		info.put("create_time", Tools.getSysTimeFormat("yyyy-MM-dd HH:mm:ss"));

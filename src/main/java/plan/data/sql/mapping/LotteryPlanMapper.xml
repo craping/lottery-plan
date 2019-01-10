@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="plan.data.sql.entity.LotteryPlan">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="lottery" jdbcType="VARCHAR" property="lottery" />
     <result column="plan_type" jdbcType="VARCHAR" property="planType" />
     <result column="plan_count" jdbcType="INTEGER" property="planCount" />
     <result column="plan_schema" jdbcType="VARCHAR" property="planSchema" />
@@ -15,8 +16,8 @@
     <result column="win" jdbcType="INTEGER" property="win" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, plan_type, plan_count, plan_schema, period, position, create_time, win_result, 
-    win_period, win
+    id, name, lottery, plan_type, plan_count, plan_schema, period, position, create_time, 
+    win_result, win_period, win
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -32,14 +33,14 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into lottery_plan (name, plan_type, plan_count, 
-      plan_schema, period, position, 
-      create_time, win_result, win_period, 
-      win)
-    values (#{name,jdbcType=VARCHAR}, #{planType,jdbcType=VARCHAR}, #{planCount,jdbcType=INTEGER}, 
-      #{planSchema,jdbcType=VARCHAR}, #{period,jdbcType=VARCHAR}, #{position,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{winResult,jdbcType=VARCHAR}, #{winPeriod,jdbcType=VARCHAR}, 
-      #{win,jdbcType=INTEGER})
+    insert into lottery_plan (name, lottery, plan_type, 
+      plan_count, plan_schema, period, 
+      position, create_time, win_result, 
+      win_period, win)
+    values (#{name,jdbcType=VARCHAR}, #{lottery,jdbcType=VARCHAR}, #{planType,jdbcType=VARCHAR}, 
+      #{planCount,jdbcType=INTEGER}, #{planSchema,jdbcType=VARCHAR}, #{period,jdbcType=VARCHAR}, 
+      #{position,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{winResult,jdbcType=VARCHAR}, 
+      #{winPeriod,jdbcType=VARCHAR}, #{win,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="plan.data.sql.entity.LotteryPlan">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -49,6 +50,9 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="name != null">
         name,
+      </if>
+      <if test="lottery != null">
+        lottery,
       </if>
       <if test="planType != null">
         plan_type,
@@ -81,6 +85,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="lottery != null">
+        #{lottery,jdbcType=VARCHAR},
       </if>
       <if test="planType != null">
         #{planType,jdbcType=VARCHAR},
@@ -117,6 +124,9 @@
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
+      <if test="lottery != null">
+        lottery = #{lottery,jdbcType=VARCHAR},
+      </if>
       <if test="planType != null">
         plan_type = #{planType,jdbcType=VARCHAR},
       </if>
@@ -150,6 +160,7 @@
   <update id="updateByPrimaryKey" parameterType="plan.data.sql.entity.LotteryPlan">
     update lottery_plan
     set name = #{name,jdbcType=VARCHAR},
+      lottery = #{lottery,jdbcType=VARCHAR},
       plan_type = #{planType,jdbcType=VARCHAR},
       plan_count = #{planCount,jdbcType=INTEGER},
       plan_schema = #{planSchema,jdbcType=VARCHAR},

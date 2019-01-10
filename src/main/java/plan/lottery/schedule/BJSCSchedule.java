@@ -2,8 +2,10 @@ package plan.lottery.schedule;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -45,7 +47,7 @@ public class BJSCSchedule {
 	private PlanServer planServer;
 
 	//@Scheduled(cron="0 0,10,15,20,25,30,35,40,45,50,55 9-23 * * ?")
-	//@Scheduled(fixedDelay = 20000)
+	@Scheduled(fixedDelay = 20000)
 	public void oprBJSCBonus() {
 		log.info("########## 开始北京赛车开奖任务 ##########");
 		BJSCResutVO resultVo = JsoupUtil.BJSCReslut();
@@ -60,7 +62,7 @@ public class BJSCSchedule {
 			return;
 		
 		List<LotteryBetting> bettingList = new ArrayList<>();
-		list.forEach((str) -> {
+		for (String str : list) {
 			JSONObject record = JSONObject.fromObject(str);
 			String bet_type = record.getString("bet_type"); // 投注类型
 			String schema = record.getString("bet_schema"); 	// 投注方案
@@ -86,7 +88,7 @@ public class BJSCSchedule {
 			betting.setBonus(bonus);
 			betting.setWin(isWin);
 			bettingList.add(betting);
-		});
+		}
 		
 		// 当前期投注记录持久化 并删除投注缓存记录
 		if (bettingServer.batchInsert(bettingList) == 1) {
@@ -97,24 +99,35 @@ public class BJSCSchedule {
 	
 	//@Scheduled(fixedDelay = 20000)
 	public void oprBJSCPlan() {
-		log.info("########## 开始每天保存推荐计划持久化任务 ##########");
 		List<LotteryPlan> result = new ArrayList<>();
-		String history_key = "plan_history"; 
-		// 获取当日计划缓存记录 并且持久化数据库
-		Map<Object, Object> history_plan = redisTemplate.opsForHash().entries(history_key);
-		if (history_plan == null || history_plan.isEmpty())
+		log.info("########## 开始每天保存推荐计划持久化任务 ##########");
+		Set<String> keys = redisTemplate.keys("plan_history_*");
+		if (keys.size() <= 0)
 			return;
 		
-		history_plan.forEach((key, value) -> {
-			LotteryPlan plan = new LotteryPlan();
-			plan = ClassUtil.fillObject((Map)JSONObject.fromObject(value), plan);
-			result.add(plan);
-		});
-
+		for (String key : keys) {
+			List<String> plans = redisTemplate.opsForList().range(key, 0, -1);
+			for (String plan : plans) {
+				LotteryPlan lotteryPlan = new LotteryPlan();
+				JSONObject obj = JSONObject.fromObject(plan);
+				lotteryPlan.setName(obj.getString("name"));
+				lotteryPlan.setLottery(obj.getString("lottery").toUpperCase());
+				lotteryPlan.setPlanType(obj.getString("type"));
+				lotteryPlan.setPlanCount(obj.optInt("plan_count"));
+				lotteryPlan.setPlanSchema(obj.getString("schema"));
+				lotteryPlan.setPeriod(obj.getString("period"));
+				lotteryPlan.setPosition(obj.optInt("position"));
+				lotteryPlan.setCreateTime(new Date());
+				lotteryPlan.setWin(obj.optBoolean("win")?1:0);
+				lotteryPlan.setWinPeriod(obj.optString("win_period"));
+				lotteryPlan.setWinResult(obj.optString("win_result"));
+				result.add(lotteryPlan);
+			}
+		}
 		// 当前期投注记录持久化 并删除投注缓存记录
 		if (planServer.batchInsert(result) == 1) {
-			redisTemplate.delete(history_key);
+			redisTemplate.delete(keys);
 		}
-		log.info("########## 保存推荐计划持久化任务执行完毕：" + history_plan.size());
+		log.info("########## 保存推荐计划持久化任务执行完毕：" + keys.size());
 	}
 }

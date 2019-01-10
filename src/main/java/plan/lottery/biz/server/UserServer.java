@@ -24,7 +24,7 @@ public interface UserServer {
 
 	int updateAdminUser(Integer id, String token);
 
-	int lockUserAdmin(Integer id, Integer server_state);
+	int lockUserAdmin(Integer id, Integer locked);
 
 	int extension(Integer id, String server_end);
 }
