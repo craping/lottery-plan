@@ -58,7 +58,6 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	@Pipe("history")
 	@BarScreen(
 		desc="查看具体方案历史记录",
-		security=true,
 		params= {
 			@Parameter(value="key"),
 			@Parameter(value="count",  desc="查询数量")

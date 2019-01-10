@@ -92,8 +92,7 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	
 	@Pipe("logout")
 	@BarScreen(
-		desc="用户退出",
-		security=true
+		desc="用户退出"
 	)
 	public Errcode logout (JSONObject params) {
 		String key = "user_" + params.getString("token");
@@ -103,8 +102,7 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	
 	@Pipe("getUserInfo")
 	@BarScreen(
-		desc="获取用户信息",
-		security=true
+		desc="获取用户信息"
 	)
 	public Errcode getUserInfo (JSONObject params) {
 		if (Tools.isStrEmpty(params.optString("token")))

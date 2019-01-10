@@ -34,7 +34,6 @@ public class BetPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	@Pipe("betting")
 	@BarScreen(
 		desc="用户投注",
-		security=true,
 		params= {
 			@Parameter(type=TokenParam.class),
 			@Parameter(value="lottery_type",  desc="彩票类型"),
