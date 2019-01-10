@@ -32,7 +32,7 @@
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 
-		<table tableName="lottery_betting" domainObjectName="LotteryBetting" 
+		<table tableName="lottery_plan" domainObjectName="LotteryPlan" 
 			enableCountByExample="false" enableSelectByExample="false" 
 			enableUpdateByExample="false" enableDeleteByExample="false">
 			<generatedKey column="id" sqlStatement="MySql" identity="true"/>
