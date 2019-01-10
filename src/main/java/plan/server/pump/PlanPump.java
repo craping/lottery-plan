@@ -99,7 +99,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		
 		List<JSONObject> data = new ArrayList<>(); // 返回结果
 		long count = params.optLong("count"); 
-		long rate = params.optLong("rate"); 
+		double rate = params.optDouble("rate"); 
 		ScanOptions options = ScanOptions.scanOptions().match(pattern).build();
 		Cursor<Map.Entry<Object, Object>> curosr = redisTemplate.opsForHash().scan("plan_current", options);
         while(curosr.hasNext()){
