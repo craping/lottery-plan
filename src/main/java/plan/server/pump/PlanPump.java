@@ -95,7 +95,9 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		if (!Tools.isStrEmpty(params.optString("position")))
 			pattern = pattern + params.optString("position") + "_"; 
 		if (!Tools.isStrEmpty(params.optString("plan_count")))
-			pattern = pattern + params.optString("plan_count") + "_*";
+			pattern = pattern + params.optString("plan_count") + "_";
+		if (!Tools.isStrEmpty(pattern))
+			pattern = pattern + "*";
 		
 		List<JSONObject> data = new ArrayList<>(); // 返回结果
 		long count = params.optLong("count"); 
