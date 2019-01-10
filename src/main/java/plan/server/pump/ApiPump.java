@@ -2,10 +2,7 @@ package plan.server.pump;
 
 import java.io.IOException;
 import java.security.interfaces.RSAPublicKey;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +24,6 @@ import org.springframework.stereotype.Component;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.FullHttpRequest;
 import net.sf.json.JSONObject;
-import plan.data.sql.entity.LotteryUser;
 import plan.server.HttpServer;
 
 @Pump("api")

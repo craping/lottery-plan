@@ -27,7 +27,6 @@ import plan.data.sql.entity.LotteryUserSetting;
 import plan.lottery.biz.server.UserSettingServer;
 import plan.lottery.common.CustomErrors;
 import plan.lottery.common.param.TokenParam;
-import plan.lottery.utils.ClassUtil;
 import plan.lottery.utils.Tools;
 
 @Pump("setting")
@@ -71,7 +70,7 @@ public class UserSettingPump extends DataPump<JSONObject, FullHttpRequest, Chann
 		// 保存计划
 		LotteryUserSetting setting = new LotteryUserSetting();
 		setting.setUid(uid);
-		setting = ClassUtil.fillObject((Map)params, setting);
+		//setting = ClassUtil.fillObject((Map)params, setting);
 		settingServer.save(setting);
 		
 		// 更新缓存
@@ -110,7 +109,7 @@ public class UserSettingPump extends DataPump<JSONObject, FullHttpRequest, Chann
 		// 保存计划
 		LotteryUserSetting setting = new LotteryUserSetting();
 		setting.setUid(uid);
-		setting = ClassUtil.fillObject((Map)params, setting);
+		//setting = ClassUtil.fillObject((Map)params, setting);
 		if (settingServer.update(setting) == 0)
 			return new DataResult(CustomErrors.USER_OPR_ERR);
 		
