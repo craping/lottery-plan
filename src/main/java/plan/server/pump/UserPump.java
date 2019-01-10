@@ -45,6 +45,7 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	@Pipe("login")
 	@BarScreen(
 		desc="用户登录",
+		security=true,
 		params= {
 			@Parameter(value="login_name",  desc="登录名"),
 			@Parameter(value="login_pwd",  desc="密码"),
@@ -91,7 +92,8 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	
 	@Pipe("logout")
 	@BarScreen(
-		desc="用户退出"
+		desc="用户退出",
+		security=true
 	)
 	public Errcode logout (JSONObject params) {
 		String key = "user_" + params.getString("token");
@@ -101,7 +103,8 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	
 	@Pipe("getUserInfo")
 	@BarScreen(
-		desc="获取用户信息"
+		desc="获取用户信息",
+		security=true
 	)
 	public Errcode getUserInfo (JSONObject params) {
 		if (Tools.isStrEmpty(params.optString("token")))
@@ -124,6 +127,7 @@ public class UserPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	@Pipe("changePwd")
 	@BarScreen(
 		desc="修改密码",
+		security=true,
 		params= {
 			@Parameter(type=TokenParam.class),
 			@Parameter(value="old_pwd",  desc="当前密码"),

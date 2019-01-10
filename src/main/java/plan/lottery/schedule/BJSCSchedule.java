@@ -47,7 +47,7 @@ public class BJSCSchedule {
 	private PlanServer planServer;
 
 	//@Scheduled(cron="0 0,10,15,20,25,30,35,40,45,50,55 9-23 * * ?")
-	@Scheduled(fixedDelay = 20000)
+	//@Scheduled(fixedDelay = 20000)
 	public void oprBJSCBonus() {
 		log.info("########## 开始北京赛车开奖任务 ##########");
 		BJSCResutVO resultVo = JsoupUtil.BJSCReslut();
@@ -117,7 +117,7 @@ public class BJSCSchedule {
 				lotteryPlan.setPlanSchema(obj.getString("schema"));
 				lotteryPlan.setPeriod(obj.getString("period"));
 				lotteryPlan.setPosition(obj.optInt("position"));
-				lotteryPlan.setCreateTime(new Date());
+				lotteryPlan.setCreateTime(new Date(obj.optLong("time", new Date().getTime())));
 				lotteryPlan.setWin(obj.optBoolean("win")?1:0);
 				lotteryPlan.setWinPeriod(obj.optString("win_period"));
 				lotteryPlan.setWinResult(obj.optString("win_result"));

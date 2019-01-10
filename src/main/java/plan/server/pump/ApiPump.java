@@ -68,18 +68,6 @@ public class ApiPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	}
 	
 	public static void main (String args[]) throws IOException {
-		List<String> players =  new ArrayList<>();
-		players.add("1");
-		players.add("2");
-		players.add("3");
-		players.forEach((player) -> System.out.println(player + "; "));
-		players.forEach(System.out::print);
-		
-		LotteryUser user = new LotteryUser();
-		user.setId(1);
-		user.setCdkey("111111111");
-		user.setServerEnd(new Date());
-		System.out.println(JSONObject.fromObject(user));
 		
 	}
 }

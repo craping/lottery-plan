@@ -98,7 +98,7 @@ public class AdminPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		Map<Object, Object> userMap = redisTemplate.opsForHash().entries(key);
 		userMap.remove("user_pwd");
 		if (userMap.isEmpty() || userMap == null)
-			return new DataResult(Errors.OK);
+			return new DataResult(CustomErrors.USER_NOT_LOGIN);
 		
 		return new DataResult(Errors.OK, new Data(userMap));
 	}

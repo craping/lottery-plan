@@ -43,6 +43,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	@Pipe("info")
 	@BarScreen(
 		desc="查看具体方案详情",
+		security=true,
 		params= {
 			@Parameter(type=TokenParam.class),
 			@Parameter(value="key")
@@ -57,6 +58,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	@Pipe("history")
 	@BarScreen(
 		desc="查看具体方案历史记录",
+		security=true,
 		params= {
 			@Parameter(value="key"),
 			@Parameter(value="count",  desc="查询数量")
@@ -72,6 +74,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 	@Pipe("search")
 	@BarScreen(
 		desc="筛选计划",
+		security=true,
 		params= {
 			@Parameter(type=TokenParam.class),
 			@Parameter(value="lottery",  desc="彩种", required=false),
