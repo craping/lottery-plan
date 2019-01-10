@@ -76,10 +76,10 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		security=true,
 		params= {
 			@Parameter(type=TokenParam.class),
-			@Parameter(value="lottery",  desc="彩种", required=false),
-			@Parameter(value="type",  desc="计划玩法 DWD DX DS", required=false),
-			@Parameter(value="position",  desc="方案位置", required=false),
-			@Parameter(value="plan_count",  desc="计划投注期数2,3期计划", required=false),
+			@Parameter(value="lottery"),
+			@Parameter(value="type",  desc="计划玩法 DWD DX DS", required=false, empty=true),
+			@Parameter(value="position",  desc="方案位置", required=false, empty=true),
+			@Parameter(value="plan_count",  desc="计划投注期数2,3期计划", required=false, empty=true),
 			@Parameter(value="count",  desc="查询数量"),
 			@Parameter(value="rate", desc="胜率计算数")
 		}
