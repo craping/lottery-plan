@@ -10,7 +10,6 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.crap.jrain.core.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -46,7 +45,8 @@ public class BJSCSchedule {
 	@Autowired
 	private PlanServer planServer;
 
-	//@Scheduled(cron="0 0,10,15,20,25,30,35,40,45,50,55 9-23 * * ?")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Scheduled(cron="0 0,5,10,15,20,25,30,35,40,45,50,55 0,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 * * ? ")
 	//@Scheduled(fixedDelay = 20000)
 	public void oprBJSCBonus() {
 		log.info("########## 开始北京赛车开奖任务 ##########");
