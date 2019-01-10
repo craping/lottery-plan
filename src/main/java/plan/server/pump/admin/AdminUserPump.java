@@ -51,9 +51,9 @@ public class AdminUserPump extends DataPump<JSONObject, FullHttpRequest, Channel
 	)
 	public Errcode addUser (JSONObject params) {
 		LotteryUser user = new LotteryUser();
+		user = ClassUtil.fillObject((Map) params, user);
 		user.setUserPwd(Coder.encryptMD5(params.getString("user_pwd")));
 		user.setToken(null);
-		user = ClassUtil.fillObject((Map) params, user);
 		userServer.addUser(user);
 		return new DataResult(Errors.OK);
 	}
