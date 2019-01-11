@@ -1,5 +1,6 @@
 package plan.server.pump.admin;
 
+import java.util.Date;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -54,6 +55,8 @@ public class AdminUserPump extends DataPump<JSONObject, FullHttpRequest, Channel
 		user = ClassUtil.fillObject((Map) params, user);
 		user.setUserPwd(Coder.encryptMD5(params.getString("user_pwd")));
 		user.setToken(null);
+		user.setServerStart(new Date());
+		user.setRegTime(new Date());
 		userServer.addUser(user);
 		return new DataResult(Errors.OK);
 	}
