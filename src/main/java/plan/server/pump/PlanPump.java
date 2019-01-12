@@ -80,6 +80,7 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 			@Parameter(value="type",  desc="计划玩法 DWD DX DS", required=false, empty=true),
 			@Parameter(value="position",  desc="方案位置", required=false, empty=true),
 			@Parameter(value="plan_count",  desc="计划投注期数2,3期计划", required=false, empty=true),
+			@Parameter(value="code_count",  desc="计划码数", required=false, empty=true),
 			@Parameter(value="count",  desc="查询数量"),
 			@Parameter(value="rate", desc="胜率计算数")
 		}
@@ -96,6 +97,8 @@ public class PlanPump extends DataPump<JSONObject, FullHttpRequest, Channel> {
 		pattern.append(params.optString("position", "*")); 
 		pattern.append("_");
 		pattern.append(params.optString("plan_count", "*")); 
+		pattern.append("_");
+		pattern.append(params.optString("code_count", "*")); 
 		pattern.append("_*");
 		
 		List<JSONObject> data = new ArrayList<>(); // 返回结果
